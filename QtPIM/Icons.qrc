@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/trayIcons">
+        <file alias="add.png">icons/list-add.png</file>
+        <file alias="shutdown.png">icons/system-shutdown.png</file>
+        <file alias="setting.png">icons/configure.png</file>
+        <file alias="browser.png">icons/applications-internet.png</file>
+        <file alias="ok.png">icons/mail-mark-notjunk.png</file>
+        <file alias="cancel.png">icons/process-stop.png</file>
+    </qresource>
+</RCC>

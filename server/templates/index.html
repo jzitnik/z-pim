@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html style="height:100%;width:100%;">
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+	<title>PIM - Personal Information Manager</title>
+<!-- 	<link id="themeStyles" rel="stylesheet" href="dojo/dijit/themes/claro/claro.css">  -->
+	<style type="text/css">
+		@import "dojo/dijit/themes/claro/claro.css";
+		@import "dojo/dojo/resources/dojo.css";
+		@import "dojo/dojox/grid/resources/claroGrid.css";
+		@import "dojo/dojox/grid/enhanced/resources/claro/EnhancedGrid.css";
+		@import "dojo/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css";
+		@import "dojo/dojox/widget/Portlet/Portlet.css";
+	</style>
+	<link rel="stylesheet" href="dojox/widget/ColorPicker/ColorPicker.css" />
+	<link rel="stylesheet" href="dojo/dojox/layout/resources/GridContainer.css">
+	<link rel="stylesheet" href="dojo/dojox/layout/resources/DndGridContainer.css">
+	<link rel="stylesheet" href="css/screen.css">
+</head>
+<body class="claro" style="width:100%; height:100%;">
+<div id="preloader" align="center" style="position:relative; top:200px;">
+	<img src="img/preloader.gif">
+	<br>
+	<span align="center"><b>Načítání</b></span>
+</div>
+<script type="text/javascript" src="dojo/dojo/dojo.js" djConfig="locale: 'cs', isDebug: true, debugAtAllCosts: true"></script>
+<script type="text/javascript">
+		dojo.registerModulePath("app", "/app");
+// 		dojo.registerModulePath("dgrid", "/dojo/dgrid");
+		dojo.require("app.init");
+// 		dojo.require("dgrid.Grid");
+		dojo.addOnLoad(function() {
+			app.init();
+		});
+</script>
+
+</body>
+</html>

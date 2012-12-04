@@ -1,0 +1,1898 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.4.10)  12 APR 2012 17:42
+entering extended mode
+ %&-line parsing enabled.
+**% Nejprve uvedeme tridu dokumentu s volbami
+
+*\documentclass[bc,female,java,dept460]{diploma}						% jednostranny dokument
+! I can't find file `".ogut"'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: %\documentclass[bc,female,java,dept460,two
+side]{diploma}		% oboustranny dokument
+! I can't find file `%\documentclass[bc,female,java,dept460,twoside]{diploma}		
+%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \usepackage{czech}
+! I can't find file `\usepackage{czech}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \usepackage[utf8]{inputenc}
+! I can't find file `\usepackage[utf8]{inputenc}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\usepackage[utf8]{inputenc}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\usepackage[utf8]{inputenc}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % Zadame pozadovane vstupy pro generovani 
+titulnich stran.
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \Author{Jan Žitník}
+! I can't find file `\Author{Jan'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\Author{Jan'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \Title{PIM - Personal Information Manageme
+nt}
+! I can't find file `\Title{PIM'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\Title{PIM'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \EnglishTitle{Diploma thesis}
+! I can't find file `\EnglishTitle{Diploma'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\EnglishTitle{Diploma'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \SubmissionDate{16. dubna 2012}
+! I can't find file `\SubmissionDate{16.'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\SubmissionDate{16'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \PrintPublicationAgreement{true}
+! I can't find file `\PrintPublicationAgreement{true}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\PrintPublicationAgreement{true}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AccessRestriction{Licence GPL}
+! I can't find file `\AccessRestriction{Licence'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\AccessRestriction{Licence'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \Thanks{Rád bych na tomto místě poděko
+val všem, kteří mi s prací pomohli, protože bez nich by tato práce nevzni
+kla.}
+! I can't find file `\Thanks{Rád'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\Thanks{Rád'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \CzechAbstract{
+! I can't find file `\CzechAbstract{'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Cílem této práce je implementovat webov
+ou aplikaci pro organizaci a správu osobních dat, plánování,
+! I can't find file `Cílem'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: zaznamenávání poznámek a organizaci sc
+hůzek.
+! I can't find file `zaznamenávání'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Součástí aplikace je emailový klient a
+ RSS čtečka.
+! I can't find file `Součástí'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Bakalářská práce popisuje architekturu
+ a tvorbu webového serveru a uživatelského prostředí bežícím ve webové
+m prohlížeči.
+! I can't find file `Bakalářská'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: }
+! I can't find file `}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \CzechKeywords{typografie, \LaTeX, diplomo
+vá práce}
+! I can't find file `\CzechKeywords{typografie,'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\CzechKeywords{typografie,'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \EnglishAbstract{This is English abstract.
+ This is English abstract. This is English abstract. This is English abstract. 
+This is English abstract. This is English abstract.}
+! I can't find file `\EnglishAbstract{This'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\EnglishAbstract{This'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \EnglishKeywords{typography, \LaTeX, maste
+r thesis}
+! I can't find file `\EnglishKeywords{typography,'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\EnglishKeywords{typography,'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % Pridame pouzivane zkratky (pokud nejake 
+pouzivame).
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{PIM}{Personal Information Mana
+gement}
+! I can't find file `\AddAcronym{PIM}{Personal'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{GPL}{General Public License}
+! I can't find file `\AddAcronym{GPL}{General'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{GNU}{GNU is Not Unix}
+! I can't find file `\AddAcronym{GNU}{GNU'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{SQL}{Structured Query Language
+}
+! I can't find file `\AddAcronym{SQL}{Structured'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{HTML}{Hyper Text Markup Langua
+ge}
+! I can't find file `\AddAcronym{HTML}{Hyper'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{GUI}{Graphical User Interface}
+
+! I can't find file `\AddAcronym{GUI}{Graphical'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{WSGI}{Web Server Gateway Inter
+face}
+! I can't find file `\AddAcronym{WSGI}{Web'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{IMAP}{Internet Message Access 
+Protocol}
+! I can't find file `\AddAcronym{IMAP}{Internet'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{SMTP}{Simple Mail Transfer Pro
+tocol}
+! I can't find file `\AddAcronym{SMTP}{Simple'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{RSS}{RDF Site Summary}
+! I can't find file `\AddAcronym{RSS}{RDF'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \AddAcronym{API}{Application Programming I
+nterface}
+! I can't find file `\AddAcronym{API}{Application'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\AddAcronym{API}{Application'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\AddAcronym{API}{Application'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % Zacatek dokumentu
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \begin{document}
+! I can't find file `\begin{document}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\begin{document}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % Nechame vysazet titulni strany.
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \MakeTitlePages
+! I can't find file `\MakeTitlePages'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\MakeTitlePages'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % Asi urcite budeme potrebovat obsah prace
+.
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \tableofcontents
+! I can't find file `\tableofcontents'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \cleardoublepage	% odstrankujeme, u jednos
+tranneho dokumentu o jednu stranku, u oboustrenneho o dve
+! I can't find file `\cleardoublepage	%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\cleardoublepage	%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % % Jsou v praci tabulky? Pokud ano vysazi
+me jejich seznam.
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % % Pokud ne smazeme nasledujici makro.
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \listoftables
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \cleardoublepage	% odstrankujeme, u jedn
+ostranneho dokumentu o jednu stranku, u oboustrenneho o dve
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: %
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % % Jsou v praci obrazky? Pokud ano vysazi
+me jejich seznam.
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \listoffigures
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \cleardoublepage	% odstrankujeme, u jedn
+ostranneho dokumentu o jednu stranku, u oboustrenneho o dve
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: %
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: %
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % % Jsou v praci vypisy programu? Pokud an
+o vysazime jejich seznam.
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \lstlistoflistings
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \cleardoublepage	% odstrankujeme, u jedn
+ostranneho dokumentu o jednu stranku, u oboustrenneho o dve
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: %
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % Zacneme uvodem
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \section{Úvod}
+! I can't find file `\section{Úvod}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \label{sec:uvod}
+! I can't find file `\label{sec:uvod}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Každý se už určitě setkal s probléme
+m cokoliv si zapamatovat, vědět kdy je kde jaká schůzka, že má nakoupit k
+romě rohlíku i mléko, nebo udělat projekt do školy. V době počítačové
+ jsou papírové organizéry nejen nepraktické, ale špatně se zálohují, ne
+lze v nich vyhledávat a dalších spousta nevýhod.
+! I can't find file `Každý'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Na internetu lze najít spousty hotových 
+řešení, ať už placené, nebo zdarma. Jen málo jich je ale použitelných.
+ Mnoho takových služeb je poskytováno v cloudu a uživatel neví, kdo má k 
+jeho údajům přístup a co se s nimi na pozadí děje.
+! I can't find file `Na'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Cílem této bakalářské práce je vyvin
+out systém, který je šířen pod otevřenou licencí, je jednoduše rozšiř
+itelný a má zdokumentované API.Právě otevřenost systému umožňuje tvorb
+u libovolných klientských částí, případně využití v jiných aplikací
+ch.
+! I can't find file `Cílem'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Cílem'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Cílem'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: První část se zabývá vysvětlením po
+jmů, teorie a principů, na kterých aplikace zakládá. Je zmíněn programov
+ací jazyk Python, jeho základní popis včetně WSGI interface. Dále je zmí
+něn Javascript a framework DoJo pro tvorbu uživatelských rozhraní v interne
+tovém prohlížeči.
+! I can't find file `První'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `První'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Druhá část bakalářske práce se zabý
+vá návrhem databáze a architekturou aplikace, podrobné vysvětlení fungov�
+�ní serverové části a komunikací s klientskou aplikací.
+! I can't find file `Druhá'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Druhá'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Třetí část je věnována podrobnému p
+opisu implementace, popisu vzniklých problémů a jejich řešení. Detailněj
+i ukazuje strukturu programu a využití specifických knihoven a frameworků.
+! I can't find file `Třetí'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Třetí'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Třetí'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \section{Teoretický rozbor}
+! I can't find file `\section{Teoretický'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\section{Teoretický'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \subsection{Proč PIM}
+! I can't find file `\subsection{Proč'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Projektů pro PIM existuje spousta, placen
+ých i zdarma, ale při bližším prozkoumání žádný nebyl vyhovující.
+! I can't find file `Projektů'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Většina takovýchto projektů je realizo
+vána jako centralizovaná online služba, nejčastěji v podobě webové strá
+nky.
+! I can't find file `Většina'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Uživatelé tak sice mají jednoduchý př
+ístup, ale takovýto způsob ukládání osobních dat není bezpečný, proto
+že nikdy nelze odhadnout, kdo je majitel serveru a co s našimi daty ve skute�
+�nosti provádí. Ukládání firemních a citlivých dat v takových službác
+h je tedy nemožné.
+! I can't find file `Uživatelé'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Existují sice i open source aplikace, ale
+ kvalita a uživatelská přívětivost pokulhává.
+! I can't find file `Existují'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Existují'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Při výběru frameworků a programovacíc
+h jazyků byl kladen důraz na nenáročnost, multiplatformnost pro snadnou př
+enositelnost napříč operačními systémy a výslednou kvalitu finální apl
+ikace.
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Pro tvorbu grafického uživatelského roz
+hraní se využívá internetového prohlížeče, který je nainstalován na v
+ětšině počítačů a není tedy nutné instalovat další programy. Z toho 
+plyne snadná použitelnost prakticky kdekoliv.
+! I can't find file `Pro'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Internetové prohlížeče lze v dnešní 
+době využívat pro tvorbu aplikací, které jsou takřka k nerozeznání od n
+ativní aplikace.
+! I can't find file `Internetové'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Využívá se k tomu JavaScript a AJAX, kd
+y se načte prázná stránka a JavaScript dynamicky vytváří GUI prvky a umi
+sťuje na stránku.
+! I can't find file `Využívá'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Při interakci s uživatelem se stránka n
+ikdy nenačítá znovu (refresh), ale data si stáhne ze serveru ve formátu JS
+ON a případně překreslí určitou část uživatelského rozhraní. Takové
+ aplikace se často označují jako RIA - Rich Internet Application.
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Na serverovou část byl zvolen programova
+cí jazyk Python pro svou přehlednost a snadné použití. Skripty jsou pak sp
+ouštěny webovým serverem (najčasteji Apache) pomocí rozhraní WSGI. Python
+ je interpretovaný jazyk (často označován jako skriptovací) a jeho interpr
+eter je dostupný pro většinu operačních systémů.
+! I can't find file `Na'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Na'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Na'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \subsection{JavaScript a RIA aplikace, DoJ
+o}
+! I can't find file `\subsection{JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \label{sec:teorie-javascript}
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: JavaScript je objektově orientovaný prog
+ramovací jazyk, využívaný při tvorbě webových stránek. Na rozdíl od se
+rverových programovacích jazyků (například PHP) sloužících ke generová
+ní kódu samotné stránky, JavaScript běží na straně klienta, tedy v proh
+lížeči až po stažení do vašeho počítače.
+! I can't find file `JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: JavaScript se používá především pro 
+vytváření interaktivních webových stránek. Příkladem použití mohou b�
+�t nejrůznější kontroly správného vyplnění formulářů, obrázky měn�
+�cí se po přejetí myší, rozbalovací menu atd. JavaScript se také často 
+používá k měření statistik návštěvnosti.
+! I can't find file `JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Společně s jazykem HTML a CSS (formátov
+áním vzhledu stránky) je JavaScript součástí DHTML, souboru technik a pos
+tupů zaměřených na zlepšení uživatelského rozhraní a zvýšení proži
+tku z používání stránek. K tomu JavaScript využívá tzv. DOM, rozhraní 
+umožňující přistupovat k jednotlivým prvkům stránky.
+! I can't find file `Společně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Společně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Společně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: JavaScript vyvinula společnost Netscape v
+ roce 1995 a v roce 1998 byl standardizován organizací ISO
+! I can't find file `JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `JavaScript'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Dojo Toolkit je kolekcí javascriptových 
+komponent, které mají pomoct webovému vývojáři. Základem je dojo.js, kte
+rý obsahuje kolekci „nezbytných“ API pro nejčastější použití a nab�
+�zí celou knihovnu funkcí. Dojo je zcela zadarmo pod duální licencí AFL a 
+BSD licencí.
+! I can't find file `Dojo'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Dojo'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Druhou částí DoJo toolkitu je GUI kniho
+vna dijit a dojox, která poskytuje plnohodnotné prvky pro tvorbu uživatelsk�
+�ch rozhraní, využívá tříd a dědičnosti.
+! I can't find file `Druhou'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Druhou'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \subsection{Python, WSGI}
+! I can't find file `\subsection{Python,'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \label{sec:teorie-javascript}
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Programovací jazyk Python vytvořil Guido
+ van Rossum o vánocích roku 1989.
+! I can't find file `Programovací'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Při své práci v holandském institutu C
+WI potřeboval jazyk pro psaní utilit pro distribuovaný operační systém,
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: jenž skupina, ve které pracoval, vyvíje
+la.
+! I can't find file `jenž'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Měl v úmyslu vytvořit snadno rozšiřit
+elný jazyk podobný jazyku ABC a podoporující výjimky.
+! I can't find file `Měl'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: V únoru roku 1991 na Usenetu ohlásil prv
+ní veřejnou verzi Pythonu.
+! I can't find file `V'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `V'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Dnes je Python široce používán na mnoh
+a místech, kde je potřeba přehledný a snadno spravovatelný kód.
+! I can't find file `Dnes'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Můžeme uvést, že jej používá NASA p
+ro uživatelské rozhraní systému řídícího lety raketoplánů, aplikačn�
+� server Zope,
+! I can't find file `Můžeme'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: originální implementace protokolu BitTor
+rent, balíčkovací systém Portage v distribuci Gentoo,
+! I can't find file `originální'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: stejně tak instalátor Anaconda pocházej
+ící z RedHat Linuxu a mnohé jiné větší či menší programové celky.
+! I can't find file `stejně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `stejně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Python se vyznačuje poměrně netradičn�
+� syntaxí založenou na odsazování.
+! I can't find file `Python'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Taktéž může být pro začátečníka m
+atoucí,
+! I can't find file `Taktéž'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: že Python je silně objektový beztypový
+ jazyk s přístupem podobným spíše Smalltalku nežli "běžným"
+! I can't find file `že'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: objektovým jazykům jako je třeba Java.
+! I can't find file `objektovým'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `objektovým'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Python je jazyk interpretovaný a často p
+ovažovaný za skriptovací.
+! I can't find file `Python'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Přesto je v něm možno psát i docela ro
+zsáhlé programové celky.
+! I can't find file `Přesto'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Přesto'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Přesto'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: WSGI (Web Server Gateway Interface) definu
+je jednoduché a univerzální rozhraní (interface) mezi webovým serverem
+! I can't find file `WSGI'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: a webovou aplikací nebo frameworkem v pro
+gramovacím jazyce Python.
+! I can't find file `a'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Poslední verze jazyka Python, 3.0, vydan�
+� v prosinci 2008, je již podporována modulem modwsgi webového serveru Apach
+e.
+! I can't find file `Poslední'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Poslední'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Poslední'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \subsection{PostgreSQL}
+! I can't find file `\subsection{PostgreSQL}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \label{sec:teorie-postgres}
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: PostgreSQL, často jednoduše Postgres, je
+ objektově-relační databázový systém (ORDBMS).
+! I can't find file `PostgreSQL,'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Vydáván je pod licencí typu MIT a tudí
+ž se jedná o free a open source software.
+! I can't find file `Vydáván'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Stejně jako v případě mnoha dalších 
+open source programů, PostgreSQL není vlastněn jedinou firmou,
+! I can't find file `Stejně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: ale na jeho vývoji se podílí globální
+ komunita vývojářů a firem.
+! I can't find file `ale'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `ale'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: PostgreSQL je primárně vyvíjen pro Linu
+x resp. pro unixové systémy obecně, nicméně existují i balíčky pro plat
+formu win32.
+! I can't find file `PostgreSQL'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `PostgreSQL'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \section{Architektura aplikace}
+! I can't find file `\section{Architektura'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \label{sec:architektura}
+! I can't find file `\label{sec:architektura}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\label{sec:architektura}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Princip aplikace je rozdělení na dvě č
+ásti - klientská strana,
+! I can't find file `Princip'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: kterou můžu zastávat jakákoliv vzdále
+ná aplikace (např. JavaScript aplikace pro dekstop, Java aplikace pro Android
+)
+! I can't find file `kterou'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: a na serverovou aplikaci. Tyto dvě kompon
+enty spolu komunikují předem pevně daným protokolem ve formátu JSON.
+! I can't find file `a'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: To přináší mnoho výhod, např. nezáv
+islost klientské aplikace,
+! I can't find file `To'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: kterou si kdokoliv může napsat díky ve�
+�ejnému API - díky tomu je možné vytvořit alternativní nativní aplikace 
+pro mobilní platformy,
+! I can't find file `kterou'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: případně jiné systémy.
+! I can't find file `případně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `případně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \includegraphics[width=0.7\textwidth]{../a
+pplicationArchitecture.png}
+! I can't find file `\includegraphics[width=0.7\textwidth]{../applicationArchit
+ecture.png}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `applicationArchitecture'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: JSON, ve zkratce JavaScript Object Notatio
+n je způsob zápisu dat (datový formát) nezávislý na počítačové platfo
+rmě,
+! I can't find file `JSON,'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: určený pro přenos dat, která mohou bý
+t organizována v polích nebo agregována objektech.
+! I can't find file `určený'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Vstupem je libovolná datová struktura (�
+�íslo, řetězec, boolean, objekt nebo z nich složené pole), výstupem je v�
+�dy řetězec.
+! I can't find file `Vstupem'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Složitost hierarchie vstupní proměnné 
+není teoreticky nijak neomezena.
+! I can't find file `Složitost'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Složitost'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Navzdory názvu, JSON je zcela obecný a m
+ůže sloužit pro přenos dat (navíc, čitelný pro člověka)
+! I can't find file `Navzdory'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: v libovolném programovacím nebo skriptov
+acím jazyku.
+! I can't find file `v'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Data, zapsaná metodou JSON, mohou být sa
+mozřejmě uložena a přenášena v souborech;
+! I can't find file `Data,'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: častěji ale přenos probíhá v prostře
+dí intra- nebo internetu (např. s použitím technologie AJAX).
+! I can't find file `častěji'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `častěji'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Mezi nedostatky JSON patří to, že neumo
+žňuje definovat znakovou sadu přenášeného obsahu,
+! I can't find file `Mezi'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: optimalizace pro přenos binárních dat. 
+Tyto nedostatky platí ale pro některé (slabší) implementace.
+! I can't find file `optimalizace'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Nealfabetické znaky v řetězcích a bin�
+�rní data JSON jsou escapovány zpětným lomítkem,
+! I can't find file `Nealfabetické'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: za kterým následuje buď jeden z běžn�
+� používaných znaků (např. \\n pro nový řádek, \\t pro tabulátor, \\\ 
+pro samotné zpětné lomítko)
+! I can't find file `za'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: nebo \\u indikující znak z Unicode (UTF-
+16), za nímž následují čtyři hexadecimální číslice.
+! I can't find file `nebo'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `nebo'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Dá se říci, že JSON sází na jednoduc
+host způsobu uložení dat, srozumitelnost (data jsou čitelná člověkem),
+! I can't find file `Dá'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: platformovou nezávislost a jednotnost (JS
+ON se rychle etabloval) a to vše na úkor velikosti přenášených dat.
+! I can't find file `platformovou'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `platformovou'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `platformovou'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \newpage
+! I can't find file `\newpage'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \subsection{Komunikační protokol}
+! I can't find file `\subsection{Komunikační'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: JSON komunikaci zahajuje vždy klientská 
+strana, tedy zjednodušeně řečeno zavolá konkrétní modul na serveru.
+! I can't find file `JSON'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `JSON'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Při požadavku na server pomocí URL urč
+íme modul a jeho metodu.
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Při standartní konfiguraci má skript se
+rver/server.wsgi alias v HTTP server na \/server.
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Při volání modulu se tedy pomocí serve
+r\/nazev\_modulu\/nazev\_metody zavolá konkrétní funkce.
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Při'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Například pro získání dat všech udá
+lostí se volá URL server\/Events\/getData
+! I can't find file `Například'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Každý modul by měl implementovat 4 zák
+ladní metody - getData, update, insert a delete - více informací v sekci Arc
+hitektura serveru
+! I can't find file `Každý'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \ref{sec:ServerArchitecture}
+! I can't find file `\ref{sec:ServerArchitecture}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\ref{sec:ServerArchitecture}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \bigskip
+! I can't find file `\bigskip'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Požadavek na server je vždy ve tvaru:
+! I can't find file `Požadavek'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \begin{lstlisting}[label=src:Java,caption=
+Požadavek]
+! I can't find file `\begin{lstlisting}[label=src:Java,caption=Požadavek]'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\begin{lstlisting}[label=src:Java,caption=Požadavek]'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: request:
+! I can't find file `request:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: {
+! I can't find file `{'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   search: {
+! I can't find file `search:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:     task_start: "2012-04-07T22:30:00"
+! I can't find file `task_start:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   },
+! I can't find file `},'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   limit: 200,
+! I can't find file `limit:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   offset: 200
+! I can't find file `offset:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: }
+! I can't find file `}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \end{lstlisting}
+! I can't find file `\end{lstlisting}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\end{lstlisting}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Pomocí asociativního pole search určuje
+me klíčové slova vyhledávání - např. filtrování událostí podle času
+.
+! I can't find file `Pomocí'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Pomocí klíčových slov limit a offset u
+rčujeme úsek dat, které nám server má vrátit - vhodné pro stárnkování
+.
+! I can't find file `Pomocí'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Stránkování dat snižuje zátěž serve
+ru a množství přenesených dat, protože málokdy chceme všechny data najed
+nou.
+! I can't find file `Stránkování'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Stránkování'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \newpage
+! I can't find file `\newpage'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \begin{lstlisting}[label=src:Java,caption=
+Odpověď]
+! I can't find file `\begin{lstlisting}[label=src:Java,caption=Odpověď]'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: response:
+! I can't find file `response:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: {
+! I can't find file `{'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   data: [
+! I can't find file `data:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:     {col1: 355, col2: "string", col3: 128.
+123, col4: 128, col5: false},
+! I can't find file `{col1:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:     ...
+! I can't find file `...'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:     ...
+! I can't find file `...'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   ],
+! I can't find file `],'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   dataInfo: {
+! I can't find file `dataInfo:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:     offset: 200,
+! I can't find file `offset:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:     limit: 1000,
+! I can't find file `limit:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   },
+! I can't find file `},'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   columns: {
+! I can't find file `columns:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:     col1: {
+! I can't find file `col1:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:       type: "integer",
+! I can't find file `type:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:       valid: "[0-9]+",
+! I can't find file `valid:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:       required: true,
+! I can't find file `required:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:       name: "Název",
+! I can't find file `name:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:       visibility: ["edit", "static"]
+! I can't find file `visibility:'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:     }
+! I can't find file `}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   }
+! I can't find file `}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: }
+! I can't find file `}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \end{lstlisting}
+! I can't find file `\end{lstlisting}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\end{lstlisting}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Vrácená odpověď má podobně striktní
+ zápis jako požadavek. S příchozími daty je přiložen taky popis jednotli
+vých sloupců,
+! I can't find file `Vrácená'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: jejich datové typy, název a omezení. Me
+zi omezení patří především příznak, jestli je položka při editaci neb
+o vkládání povinná,
+! I can't find file `jejich'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: případně její validace pomocí regulá
+rního výrazu.
+! I can't find file `případně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `případně'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Popis jednotlivých sloupců je poze dopor
+učený, klientská aplikace se tím nemusí řídit a data si může zobrazova
+t dle uvážení,
+! I can't find file `Popis'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: kontrola správnosti dat se děje hlavně 
+na serveru, protože nelze spoléhat na data od klienta.
+! I can't find file `kontrola'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `kontrola'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \bigskip
+! I can't find file `\bigskip'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Popis všech parametrů:
+! I can't find file `Popis'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \begin{itemize}
+! I can't find file `\begin{itemize}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   \item type - Datový typ - je pevně sv�
+�zán s datovými typy serveru, konkrétně knihovna DataTypes,
+! I can't find file `\item'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   \item valid - Regulární výraz, podle 
+kterého se data validují
+! I can't find file `\item'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   \item required - Určuje, zda je paramet
+r povinný při editaci nebo vkládání nového záznamu
+! I can't find file `\item'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   \item name - Název sloupce
+! I can't find file `\item'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   \item visibility - pole, kdy je sloupec/
+pložka viditelná - ``edit'' při editaci, ``static'' při bežném prohlíže
+ní, případně prázné pole pokud má být položka skryta
+! I can't find file `\item'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name:   \item flags - další parametry, které 
+určují povahu sloupce - například ``primaryKey'', pokud je sloupec primárn
+ím klíčem v databázi
+! I can't find file `\item'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \end{itemize}
+! I can't find file `\end{itemize}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `\end{itemize}'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \newpage
+! I can't find file `\newpage'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: \subsection{Návrh databáze}
+! I can't find file `\subsection{Návrh'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: % \label{sec:architektura-navrh}
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `%'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Aplikace využívá databázový systém P
+ostgreSQL, využívá jeho specifické vlastnosti, není tedy jednoduše přeno
+sitelná na jiné DBMS.
+! I can't find file `Aplikace'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Aplikace'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Využívá se tří základních objektů:
+
+! I can't find file `Využívá'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Note - poznámka
+! I can't find file `Note'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Event - událost
+! I can't find file `Event'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Task - úkol
+! I can't find file `Task'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Task'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Všechny tyto tři objekty jsou zlášť v
+ tabulkách a dědí z tabulky objects.
+! I can't find file `Všechny'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Dědičnost v PostgreSQL přináší výho
+du sjednocených primárních klíčů, případně i ostatních společných s
+loupců.
+! I can't find file `Dědičnost'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Sjednocené primární klíče jsou přede
+vším z důvodu stejných vazebních tabulek na štítky.
+! I can't find file `Sjednocené'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Sjednocené'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Štítky slouží k označení, přesněji
+ začlenění do kategorií.
+! I can't find file `Štítky'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Rozdíl proti kategoriím je, že každý 
+objekt může mít libovolné množsství štítků.
+! I can't find file `Rozdíl'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: 
+! I can't find file `Rozdíl'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% jednostranny doku...
+Please type another input file name: Všechny tabulky mají striktní vazbu na 
+Users, což jsou uživatelé systému.
+! I can't find file `Všechny'.
+<to be read again> 
+                   \let 
+<*> \documentclass
+                  [bc,female,java,dept460]{diploma}						% je

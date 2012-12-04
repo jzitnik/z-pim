@@ -1,0 +1,582 @@
+.nofityWidget {
+	position: absolute;
+	z-index: 1000;
+	top: 10px;
+	right: 10px;
+	float: right;
+	width: 400px;
+/* 	height: 100px; */
+}
+
+.notifyItem {
+
+}
+
+.notifyItemWrapper {
+	background-color: black;
+	opacity: 50%;
+/* 	height: 100px; */
+	width:350px;
+	padding:10px;
+	margin-bottom:15px;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	-moz-box-shadow: 0 0 6px #000;
+	-webkit-box-shadow: 0 0 6px #000;
+	box-shadow: 0 0 6px #000;
+}
+
+.notifyItemHeader {
+	color: white;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.notifyItemMessage {
+	color: white;
+}
+
+.notifyItemCloseButton {
+	color: white;
+	font-weight: bold;
+	font-size: 14px;
+	float: right;
+}
+
+.dijitButtonFocused * {
+	outline: none;
+}
+
+.dijitTab.menuTabButton .dijitTabInnerDiv, .dijitTab.menuTabButton .dijitTabInnerDiv .dijitTabContent {
+	height: 100px;
+/* 	background: none; */
+}
+
+.claro .dijitTabContainerLeft-tabs .dijitTabInnerDiv {
+	background-position: 0 0;
+}
+
+.dijitTab.menuTabButton {
+	height: 100px;
+	text-align: center;
+}
+
+.dijitIcon.dijitTabButtonIcon {
+	height: 64px;
+	width: 64px;
+	margin: 0 auto;
+}
+
+.dijitIcon.dijitTabButtonIcon.calendar {
+	background: url('../img/menuIcons.png') 0 0 no-repeat;
+}
+.dijitIcon.dijitTabButtonIcon.calendar:hover {
+	background: url('../img/menuIcons.png') -200px 0 no-repeat;
+}
+
+
+.dijitIcon.dijitTabButtonIcon.notes {
+	background: url('../img/menuIcons.png') 0 -64px no-repeat;
+}
+
+
+
+
+.dijitIcon.dijitTabButtonIcon.settings {
+	background: url('../img/menuIcons.png') 0 -128px no-repeat;
+}
+
+
+
+.dijitIcon.dijitTabButtonIcon.contacts {
+	background: url('../img/menuIcons.png') 0 -192px no-repeat;
+}
+
+
+.dijitIcon.dijitTabButtonIcon.mails {
+	background: url('../img/menuIcons.png') 0 -256px no-repeat;
+}
+
+.dijitIcon.dijitTabButtonIcon.mails:hover {
+	background: url('../img/menuIcons.png') -200px -256px no-repeat;
+}
+
+
+.dijitIcon.dijitTabButtonIcon.rss {
+	background: url('../img/menuIcons.png') 0 -320px no-repeat;
+}
+
+.mainMenu .dijitButton {
+	width: 100%;
+	display: block;
+}
+
+.mainMenu .dijitButton .dijitButtonNode {
+	background: none;
+	display: block;
+	text-align: left;
+	padding: 0px 3px 1px 20px;
+	border: 1px solid transparent;
+	border-left: none;
+	border-right: none;
+	margin: 0;
+	color: #003866;
+	text-shadow: 0 0 0 transparent, 0px 0px 6px rgba(255, 255, 255, 1);
+	border-radius: none;
+
+}
+.mainMenu .dijitButtonHover .dijitButtonNode {
+	background-color: #e0ebf6;
+	border-color: #c1d6e9;
+	color: #000;
+}
+.mainMenu .dijitButtonActive .dijitButtonNode {
+	background-color: #e3f0fc;
+	border-color: #c0d2e2;
+	color: #000;
+}
+
+.mainMenu .dijitButton.selected {
+	background-color: #e3f0fc;
+	border-color: #c0d2e2;
+	color: #000;
+   
+}
+
+* {
+	outline: none;
+}
+
+.header {
+	border-bottom: 1px solid #B5BCC7;
+}
+
+.contentContainer {
+	padding: 15px 25px 15px 25px;
+}
+
+body {
+	background: #EFF3F6;
+}
+
+.tabFocusNode {
+	padding-top: 5px;
+}
+
+.dijitContentPane.userInfo, .userInfo {
+	background: url('../img/user.png') no-repeat;
+	padding-left: 34px;
+	font-weight: bold;
+	width: 350px;
+}
+
+.menuWidget {
+	height: 0px;
+	border-width: 0;
+	border-top: 1px solid #B5BCC7;
+	width: 90%;
+}
+
+
+.clearButton.dijitButton {
+/* 	border: 1px solid #B5BCC7; */
+}
+
+.clearButton.dijitButton .dijitButtonNode {
+	background-color: #F6F6F6;
+	background-image: url("../dojo/dijit/themes/claro/layout/images/tabLeft.png");
+	background-position: 0 -10px;
+	background-repeat: repeat-y;
+	display: block;
+	text-align: left;
+	padding: 0px 3px 1px 20px;
+	border: none;
+	border-left: none;
+	border-right: none;
+	margin: 0;
+	color: #003866;
+	vertical-align: center;
+}
+
+.clearButton.dijitButton .dijitButtonNode:hover {
+	background-position: 0 -10px;
+	background-color: #D0E8FF;
+}
+
+.clearButton .dijitReset.dijitInline.dijitButtonText {
+	font-weight: bold;
+	padding-top: 7px;
+}
+
+.clearButton .dijitIcon.dashboard {
+	background-image: url("../img/home.png") !important;
+	background-position: 0px 0px;   
+	background-repeat: no-repeat;
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	overflow: hidden;
+	padding: 1px 2px 0 0;
+	margin: 0px;
+	vertical-align: top;
+}
+
+.overview .gridContainerZone {
+	background-color: #EFF3F6;
+}
+
+.overview .gridContainerTable {
+	border: none;
+}
+
+.labelWidget {
+	width: 150px;
+	display: block;
+	position: relative;
+	margin: 5px 0 5px 0;
+}
+
+.labelWidget .label {
+	font-weight: bold;
+}
+
+.labelWidget .removeButton {
+	position: absolute;
+	right: 2px;
+	top: 0px;
+}
+
+.labelWidget .removeButton .dijitButtonNode {
+	background: none;
+	display: block;
+	text-align: left;
+	padding: 0px 3px 1px 3px;
+	border: 1px solid transparent;
+	border-left: none;
+	border-right: none;
+	margin: 0;
+	color: #003866;
+	text-shadow: 0 0 0 transparent, 0px 0px 6px rgba(255, 255, 255, 1);
+}
+
+.labelSelector {
+	padding-bottom: 5px;
+}
+
+.labelsViewTitle {
+	margin: 0 0 5px 10px;
+	font-weight: bold;
+}
+
+.dijitReset.dijitCalendarWeekTemplate .event {
+	background-color: #7592AB;
+}
+
+.dijitReset.dijitCalendarWeekTemplate .passedEvent {
+	background-color: #B5BCC7;
+}
+
+.dijitReset.dijitCalendarWeekTemplate .event .dijitCalendarDateLabel, .dijitReset.dijitCalendarWeekTemplate .passedEvent .dijitCalendarDateLabel {
+	border: none;
+}
+
+.dojoxGrid table {
+	margin: 0;
+}
+
+.quickNewTaskMessage {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	background-color: #EFF3F6;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	padding: 2px 0 0 10px;
+	font-weight: bold;
+}
+
+.logo {
+	overflow: hidden;
+	margin: 0 0 0 0 !important;
+	padding: 0 0 0 0 !important;
+}
+
+.iconButton .dijitButtonNode .dijitIcon {
+	height: 16px;
+	width: 16px;
+	background: url("../img/buttonIcons.png");
+}
+
+.iconButton .dijitIcon.cancelEdit {
+	background-position: 0 -16px;
+}
+
+.iconButton .dijitIcon.delete {
+	background-position: 0 -32px;
+}
+
+.iconButton .dijitIcon.add {
+	background-position: 0 -48px;
+}
+
+.iconButton .dijitIcon.edit {
+	background-position: 0 -64px;
+}
+
+.iconButton .dijitIcon.logout {
+	background-position: 0 -96px;
+}
+
+.iconButton .dijitIcon.previous {
+	background-position: 0 -112px;
+}
+
+.iconButton .dijitIcon.next {
+	background-position: 0 -128px;
+}
+
+.iconButton .dijitIcon.undo {
+	background-position: 0 -144px;
+}
+
+.iconButton .dijitIcon.send {
+	background-position: 0 -160px;
+}
+
+
+.inlineButtons span {
+	display: inline-block;
+}
+
+.appDataForm {
+	overflow: auto;
+}
+
+.smallSeparator {
+	height: 0px;
+	border-width: 0;
+	border-top: 1px solid #B5BCC7;
+	width: 50%;
+	padding: 20px 0 0 0;
+	margin-top: 20px;
+}
+
+.bold, .bold * {
+	font-weight: bold;
+	font-size: 12pt;
+}
+
+.rssDescriptionField {
+	max-width: 400px;
+}
+
+a {
+	font-weight: bold;
+	text-decoration: none;
+	color: #567cb3;
+	background: url("../img/buttonIcons.png") no-repeat;
+	height: 16px;
+	padding-left: 20px;
+	background-position: 0 -80px;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.rssTitleField div {
+	display: inline-block;
+}
+
+.logoutButton {
+	display: inline;
+	position: absolute;
+	right: 2px;
+	top: 3px;
+}
+
+
+.weekCalendarDayName {
+	font-size: 15pt;
+	font-weight: bold;
+	text-align: center;
+}
+
+
+.eventItem {
+	margin: 5px 5px 5px 5px;
+	cursor: pointer;
+	
+}
+
+.eventItem .itemWrapper {
+	background-color: #7592ab;
+/* 	display: inline-block; */
+}
+
+.eventItem .eventItemWrapper {
+	background-color: #EFF3F6;
+/* 	opacity: 50%; */
+/* 	height: 100px; */
+/* 	width:350px; */
+	padding:10px;
+	margin-bottom:15px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+	-moz-box-shadow: 0 0 6px #000;
+	-webkit-box-shadow: 0 0 6px #000;
+	box-shadow: 0 0 6px #000;
+}
+
+.eventItemHeader {
+	color: black;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.eventItemDescription {
+	color: black;
+}
+
+.eventItemTime {
+	color: black;
+	font-weight: bold;
+	font-size: 14px;
+	float: right;
+}
+
+.detailedView {
+	padding-left: 20px;
+}
+
+.monthView {
+	border: 1px solid #B5BCC7;
+	padding:10px;
+	margin: 10px 10px 10px 10px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+	-moz-box-shadow: 0 0 6px #000;
+	-webkit-box-shadow: 0 0 6px #000;
+	box-shadow: 0 0 6px #000;
+}
+
+.weekOfMonthBg td {
+	width: 14%
+}
+
+.weekOfMonthBg .dayOfMonth {
+	background-color: white;
+}
+
+.weekOfMonthBg .dayOfLastMonth {
+	
+}
+
+.monthBackgroundTable {
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 0;
+	height: 100%;
+	border-spacing: 1px;
+}
+
+.eventItem.eventPassed .itemWrapper {
+	background-color: #B5BCC7;
+}
+
+.weekOfMonth td {
+	cursor: url(../img/addCursor.cur), auto;
+}
+
+.monthLabel {
+	font-weight: bold;
+	padding: 0 10px 0 10px;
+	font-size: 13pt;
+}
+
+.weekLongEvents {
+	position: relative;
+}
+
+.monthView .weekOfMonthEventsTable {
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 10;
+}
+
+.weekView .weekOfMonthEventsTable {
+	width: 100%;
+	z-index: 10;
+}
+
+.weekView .weekOfMonthEventsTable thead {
+	display: none;
+}
+
+.dayHighlighted, .dayOfMonth.dayHighlighted {
+	background-color: #FFFCB3;
+}
+
+.rightAligned {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+			
+.topAligned {
+	position: absolute;
+	top: 0px;
+}
+			
+.leftAligned {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.labelsView {
+	padding: 5px 0 0 15px;
+}
+
+.labelsViewItem {
+	padding: 2px 0 2px 0;
+}
+
+.labelsViewLabelName {
+	padding-left: 7px;
+}
+
+.gridContainerTable tbody, .gridContainerTable tr {
+	height: auto;
+}
+
+.labelArrow {
+	display: inline-block;
+	border-left: 20px solid;
+	border-color: #666;
+	margin-left: 5px;
+}
+
+.labelArrow .labelArrowTriangle {
+	border-style: dashed;
+	border-color: transparent;
+	border-width: 0.53em;
+	display: -moz-inline-box;
+	display: inline-block;
+	font-size: 15px;
+	height: 0;
+	line-height: 0;
+	position: relative;
+	vertical-align: middle;
+	width: 0;
+	border-left-style: solid;
+	border-left-color: #666;
+}

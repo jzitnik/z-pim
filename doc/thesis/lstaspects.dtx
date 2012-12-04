@@ -1,0 +1,4233 @@
+% \iffalse
+%
+% Trademarks appear throughout this documentation without any trademark
+% symbol, so you can't assume that a name is free. There is no intention
+% of infringement; the usage is to the benefit of the trademark owner.
+%
+%
+%  S O F T W A R E   L I C E N S E
+% =================================
+%
+% The files lstkernel.dtx, lstaspects.dtx, listings2.ins, and all files
+% generated from only these files are referred to as `the listings package'.
+% lstlanguages.dtx and the files generated from that file are `language
+% drivers'.
+%
+% The listings package version 2 is copyright 2008,2009 Carsten Heinz.
+% It is based on prior versions of the package, which are copyright
+% 1996--2004 Carsten Heinz and copyright 2006--2007 Brooks Moses for
+% continued maintenance.
+% The drivers are copyright 1997/1998/1999/2000/2001/2002/2003/2004/2006/
+% 2007 any individual author listed in the driver files.
+%
+% The listings package and its drivers may be distributed and/or modified
+% under the conditions of the LaTeX Project Public License, either version
+% 1.3 of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2003/12/01 or later.
+%
+% The package has the LPPL maintenance status "maintained".
+%
+% The Current Maintainer is Carsten Heinz <cheinz@gmx.de>.
+%
+% end of software license
+%
+%
+%<*driver>
+% % \documentclass[a4paper]{ltxdoc}
+% % \DisableCrossrefs
+% % \OnlyDescription
+% % 
+% % \usepackage{lstdoc,textcomp}
+% % \makeindex
+% % 
+% % \begin{document}
+% %     \DocInput{lstaspects.dtx}
+% % \end{document}
+%</driver>
+% \fi
+%
+%
+% \section{Special identifiers}
+%
+%
+% \subsection{Keywords}
+%
+% \begin{aspect}{keywords}
+% Defining the keyword family is very, very easy.
+%    \begin{macrocode}
+%<*aspects>
+\lst@BeginAspect{keywords,%
+        keywords,morekeywords,deletekeywords,keywordstyle,ndkeywords,%
+        morendkeywords,deletendkeywords,ndkeywordstyle,keywordsprefix,%
+        otherkeywords}
+\lst@InstallFamily k{keywords}{keywordstyle}\bfseries{keywordstyle}{}l
+%    \end{macrocode}
+%
+% \begin{lstkey}{ndkeywords}
+% Second order keywords use the same trick as |\lst@InstallClass|:
+% we use an explicit class number.
+%    \begin{macrocode}
+\lst@Key{ndkeywords}\relax
+  {\lst@UseFamily{keywords}[\tw@]#1\relax\lst@MakeKeywords}%
+\lst@Key{morendkeywords}\relax
+  {\lst@UseFamily{keywords}[\tw@]#1\relax\lst@MakeMoreKeywords}%
+\lst@Key{deletendkeywords}\relax
+  {\lst@UseFamily{keywords}[\tw@]#1\relax\lst@DeleteKeywords}%
+\lst@Key{ndkeywordstyle}\relax{\KV@lst@keywordstyle{[\tw@]#1}}%
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{lstkey}{keywordsprefix}
+% We save the prefix and install a test.
+%    \begin{macrocode}
+\lst@Key{keywordsprefix}\relax{\lst@DefOther\lst@keywordsprefix{#1}}
+\global\let\lst@keywordsprefix\@empty
+\lst@AddToHook{Detect@keywords}{\lst@PrefixTest}
+%    \end{macrocode}
+% This test is empty if there is no prefix.
+%    \begin{macrocode}
+\lst@AddToHook{Init}%
+  {\ifx\lst@keywordsprefix\@empty
+     \let\lst@PrefixTest\@empty
+   \else
+     \expandafter\lst@DefPrefixTest\expandafter{\lst@keywordsprefix}%
+   \fi}
+\global\let\lst@PrefixTest\@empty
+%    \end{macrocode}
+% The actual test |\lst@ThePrefixTest| and its caller |\lst@PrefixTest| are
+%  similar to |\lst@IfSubstring|, but here |##1| needs to be empty.
+%    \begin{macrocode}
+\gdef\lst@DefPrefixTest#1{%
+  \def\lst@ThePrefixTest##1#1##2\relax{%
+    \ifx \@empty##1\@empty \lst@gkeywords@wp1\fi}%
+  \def\lst@PrefixTest{\expandafter\lst@ThePrefixTest\the\lst@token#1\relax}}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{lstkey}{otherkeywords}
+% are defined as keywords of order 0.
+%    \begin{macrocode}
+\lst@Key{otherkeywords}\relax{%
+  \KV@lst@keywords{[\z@]#1}%
+%    \end{macrocode}
+% The scanner must be aware of these new tokens, so we add them to the
+%  adjustments of the character table.
+% First we delete previous other keywords.
+%    \begin{macrocode}
+  \lst@RedefDeleteClass{OtherKeyword}%
+%    \end{macrocode}
+% Now we can insert the other keywords step by step.
+%    \begin{macrocode}
+  \lst@DefKeywordList\lst@temp{#1}%
+  \lst@for\lst@temp\do{%
+    \ifx\@empty##1\@empty\else
+      \lst@RedefInsert\lst@OtherKeyword{##1}{\lst@OtherKeyword{##1}}%
+    \fi}}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@OtherKeyword}
+% The actual definition is similar to delimiter definitions.
+% We also use |\@empty| as terminator and scan the character as one token if and
+%  only if keywords are active.
+%    \begin{macrocode}
+\gdef\lst@OtherKeyword#1{%
+  \lst@CArg#1\relax\lst@CDef{}%
+      {\lst@ifkeywords \expandafter\lst@ScanOtherKeyword
+                 \else \expandafter\lst@CArgEmpty \fi}%
+      \@empty}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@ScanOtherKeyword}
+% If low-level scanning (i.e.~the simple tokenizing) is turned off, we do
+%  nothing special: insert |#1|, interrupt scanning to exit the |if|, and
+%  continue.
+%    \begin{macrocode}
+\gdef\lst@ScanOtherKeyword#1\@empty{%
+  \lst@scanifx\lst@scanclass\relax
+    #1^^@%
+  \else
+%    \end{macrocode}
+% If low-level scanning is turn on, we scan the other keyword as one token.
+%    \begin{macrocode}
+    \lst@AddTokenToStream
+    \lst@ScanToken\lst@scan@i{#1}%
+    \lst@AddTokenToStream
+  \fi
+  \lst@ScanNextChar}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{The emphasize family}
+%
+% \begin{aspect}{emph}
+% is just one macro call here.
+%    \begin{macrocode}
+\lst@BeginAspect{emph,%
+        emph,moreemph,deleteemph,emphstyle}
+\lst@InstallFamily e{emph}{emphstyle}{}{emphstyle}{}o
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{\TeX\ control sequences}
+%
+% \begin{aspect}{tex}
+% We install a new family and \ldots
+%    \begin{macrocode}
+\lst@BeginAspect{tex,%
+        texcs,moretexcs,deletetexcs,texcsstyle}
+\lst@InstallFamily {cs}{texcs}{texcsstyle}\relax{keywordstyle}{}l
+%    \end{macrocode}
+% a new character class.
+% Low-level scanning is turned off \ldots
+%    \begin{macrocode}
+\gdef\lst@Scan@texbs#1#2{%
+  \lst@scanifx\lst@scanclass\relax
+    \def\lst@next{\futurelet\lst@recentchar\lst@ScanAddCharToToken#1#2}%
+  \else
+%    \end{macrocode}
+% or is turned on.
+% If the next character builds identifiers, the escape character also uses that
+%  class.
+% Otherwise we have a `one character' control sequence, which is scanned and put
+%  into the token stream.
+%    \begin{macrocode}
+    \lst@AddTokenToStream
+    \def\lst@next{%
+      \lst@IfNextScan\lst@Scan@i{\lst@Scan@i #1}%
+                                {\lst@ScanToken\lst@scan@m{\lst@Scan@m #1#2}%
+                                 \lst@AddTokenToStream
+                                 \expandafter\lst@ScanNextChar\@gobble}%
+                                #2}%
+  \fi
+  \lst@next}
+%    \end{macrocode}
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Compiler directives}
+%
+% \begin{aspect}{directives}
+% This aspect consists of a delimiter especially for |#|, an identifier class,
+%  and a string delimiter for included files.
+%    \begin{macrocode}
+\lst@BeginAspect{directives,%
+        directives,moredirectives,deletedirectives,directivestyle}
+%    \end{macrocode}
+% \keyname{directives} are active only in |\lst@CDmode|.
+% So we replace |\lst@directivestrue| in |\lst@InitModesT| by its counterpart
+%  and turn directives off.
+%    \begin{macrocode}
+\lst@InstallClass{d}{directives}{directivestyle}\relax{keywordstyle}
+%   {\ifnum\lst@mode=\lst@CDmode \lst@directivestyle \fi}
+    {}l
+\let\lst@arg\lst@InitModesT
+\lst@ReplaceIn\lst@arg{\@empty\lst@directivestrue\lst@directivesfalse}
+\global\let\lst@InitModesT\lst@arg
+\global\let\lst@directives\@empty % init
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@CDmode}
+% \begin{macro}{\lst@Delim@directive}
+% The (|C|) directive mode does not change the mode setting (one stars).
+% We enter that mode only in the first column, allow directives, and select
+%  the correct style for printing |#|.
+%    \begin{macrocode}
+\lst@NewMode*[]\lst@CDmode
+\gdef\lst@Delim@directive#1\@empty#2#3#4{%
+  \lst@CArg #1\relax\lst@DefDelimB{}%
+        {\ifnum\lst@currcolumn=\z@
+           \def\lst@bnext{#2\lst@CDmode{#4\lst@directivestrue\lst@Lmodetrue
+                          \lst@gdirectives@wp1}}%
+         \fi}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\lst@String@directive}
+% The new string delimiter enters the (dynamic) mode only if strings are allowed
+%  and if we're in |\lst@CDmode|.
+%    \begin{macrocode}
+\gdef\lst@StringDM@directive#1#2#3\@empty#4#5#6{%
+    \lst@CArg #2\relax\lst@DefDelimB{}%
+        {\lst@ifstrings \ifnum\lst@mode=\lst@CDmode
+           \def\lst@bnext{#4{#1}{#6}}%
+         \fi \fi}%
+    \lst@CArg #3\relax\lst@DefDelimE{}%
+        {\ifnum #1=\lst@mode \let\lst@enext#5\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Export of identifiers}
+%
+% \begin{aspect}{index}
+% The working procedure calls |\lst@Index| with style macro and the token
+%  content as arguments.
+%    \begin{macrocode}
+\lst@BeginAspect{index,%
+        index,moreindex,deleteindex,indexstyle}
+\lst@InstallFamily i{index}{indexstyle}\relax{indexstyle}
+  {\expandafter\lst@Index
+   \csname\@lst indexstyle\ifnum#1=\@ne\else#1\fi\expandafter\endcsname
+       \expandafter{\the\lst@token}}
+  o
+%    \end{macrocode}
+%
+% \begin{macro}{\lstindexmacro}
+% \keyname{indexstyle} is adjusted to use an exclamation mark in front of |#1|.
+% This lets the package execute the `style' instead of setting |\lst@extra|.
+%    \begin{macrocode}
+\lst@Key{indexstyle}\lstindexmacro{\lst@DefStyle{indexstyle}{!#1}}
+\lst@UserCommand\lstindexmacro#1{\index{{\ttfamily#1}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@Index}
+% \begin{macro}{\lst@Process@Index}
+% The macro used by the working procedure adds |\lst@Process@Index| (with three
+%  arguments) via \hookname{PostAddTokenToStream} hook to the token stream,
+%  which eventually calls the index macro when the token stream is processed.
+% These are more indirections than needed, but it might come in handy if we need
+%  to make changes.
+%    \begin{macrocode}
+\gdef\lst@Index#1#2{\lst@AddToHook{PostAddTokenToStream}{%
+  \lst@AddToTokenStream{\lst@Process@Index{#2}{}#1}}}
+\gdef\lst@Process@Index#1#2#3{#3{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+% \begin{aspect}{procnames}
+% \begin{lstkey}{procnamestyle}
+% \begin{lstkey}{procnamekeys}
+% \begin{lstkey}{indexprocnames}
+% The idea is the usage of a global |\lst@ifprocname|, which is initially false.
+%    \begin{macrocode}
+\lst@BeginAspect{procnames,%
+        procnames,moreprocnames,deleteprocnames,procnamestyle,indexprocnames}
+\gdef\lst@procnametrue{\global\let\lst@ifprocname\iftrue}
+\gdef\lst@procnamefalse{\global\let\lst@ifprocname\iffalse}
+\lst@AddToHook{Init}{\lst@procnamefalse}
+%    \end{macrocode}
+% Each `procnamekey' sets it true after adding the current token.
+%    \begin{macrocode}
+\lst@InstallClass {pn}{procnamekeys}{}\relax{}
+  {\lst@AddToHook{PostAddTokenToStream}\lst@procnametrue}
+  o
+%    \end{macrocode}
+% The change is catched before adding the next one.
+% If it is an indentifier, we assign the style, possibly index the current
+%  token, and reset |\lst@ifprocname|.
+%    \begin{macrocode}
+\lst@AddToHook{AddTokenToStream}
+  {\lst@ifprocname \ifx\lst@scanclass\lst@scan@i
+     \def\lst@extra{\lst@procnamestyle}%
+     \lst@ifindexprocnames \lst@gindex@wp1\fi
+     \lst@procnamefalse
+   \fi \fi}
+%    \end{macrocode}
+% The following keys save their argument.
+%    \begin{macrocode}
+\lst@Key{procnamestyle}{}{\def\lst@procnamestyle{#1}}
+\lst@Key{indexprocnames}{false}[t]{\lstKV@SetIf{#1}\lst@ifindexprocnames}
+%    \end{macrocode}
+% Finally we need to initialize the control sequence |\lst@indexstyle| if it
+%  does not exist.
+% This is done via |\lst@ProvideStyle|.
+%    \begin{macrocode}
+\lst@AddToHook{Init}%
+  {\lst@ifindexprocnames \lst@ProvideStyle\lst@indexstyle\@gobble \fi}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+% \end{lstkey}
+% \end{aspect}
+%
+%
+% \subsection{Keyword comments}
+%
+% \begin{aspect}{keywordcomments}
+% includes both comment types.
+%    \begin{macrocode}
+\lst@BeginAspect[comments]{keywordcomments,%
+        keywordcomment,morekeywordcomment,deletekeywordcomment,%
+        keywordcommentsemicolon}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@KCmode}
+% We'll use two modes.
+% The first activates the detection procedure inside keyword comments---or we
+%  couldn't detect the keyword-marked end.
+% The second uses the default.
+%    \begin{macrocode}
+\lst@NewMode[comments]\lst@KCmode
+\lst@NewMode[comments]\lst@KCSmode
+\lst@AddToModeSet{\the\lst@KCmode}{\lst@keywordcommenttrue}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{keywordcomment}
+% The working procedure ends the comment if the token matches the starting token.
+% If we're not in |\lst@KCmode|, a comment is started and the current token is saved.
+%    \begin{macrocode}
+\lst@InstallClass{kc}{keywordcomment}{}\relax{}
+  {\ifnum\lst@mode=\lst@KCmode
+     \edef\lst@temp{\the\lst@token}%
+     \ifx\lst@temp\lst@KCstart \lst@EndKeywordComment \fi
+   \else
+     \xdef\lst@KCstart{\the\lst@token}%
+     \lst@BeginKeywordComment\lst@KCmode
+   \fi}
+  l
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@BeginKeywordComment}
+% Starting a keyword comment is a bit tricky.
+% In the first place, it is started after adding the token to the stream.
+% Any other identifier detection is not affected.
+% Secondly, we do not have a delimiter here; it is already in the token stream.
+% But we must use |\lst@ScanNextChar| as delimiter to use |\lst@DelimOpen| (in
+%  the end to use |\lst@ScanToken|).
+% Thirdly, we must interrupt the scanning by inserting |^^@|.
+% In all we have three scanning loops here: the overall scanning of the listing,
+%  the loop between |\lst@DelimOpen| and |^^@|, and within that the scanning of
+%  the empty delimiter.
+%    \begin{macrocode}
+\gdef\lst@BeginKeywordComment#1{%
+  \lst@AddToHook{PostAddTokenToStream}%
+  {\lst@ResetToken
+   \lst@DelimOpen\iffalse{}#1%
+       {\lst@ScanSelectStyle\lst@ProcessSetStyle{\let\lst@extra\lst@commentstyle}}%
+       \lst@ScanNextChar \@empty^^@}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@EndKeywordCommentClose}
+% A direct call to |\lst@DelimClose| leaves the comment mode.
+% Here we have two scanning loops only since the empty delimiter is not scanned.
+%    \begin{macrocode}
+\gdef\lst@EndKeywordCommentClose{\lst@DelimClose\iffalse\@empty^^@}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@EndKeywordComment}
+% After leaving the comment, we ensure correct identifier detection by calling
+%  the \hookname{AddToTokenStream} hook with keywords comments turned off.
+%    \begin{macrocode}
+\gdef\lst@EndKeywordComment{%
+  \lst@EndKeywordCommentClose
+  \lst@keywordcommentfalse \lsthk@AddTokenToStream \lst@keywordcommenttrue}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{keywordcommentsemicolon}
+% The key simply stores the keywords.
+%    \begin{macrocode}
+\lst@Key{keywordcommentsemicolon}{}{%
+  \lstKV@ReadArgs{}{\lst@KCAkeywordsB\lst@KCAkeywordsE\lst@KCBkeywordsB}{#1}%
+  \def\lst@KCkeywords{#1}}
+\lst@AddToHook{SetLanguage}{\let\lst@KCkeywords\@empty}
+%    \end{macrocode}
+% If this keyword comment type is defined, we define the semicolon to leave any
+%  keyword comment.
+%    \begin{macrocode}
+\lst@AddToHook{SelectCharTable}
+  {\ifx\lst@KCkeywords\@empty\else
+     \lst@DefSaveDef{`\;}\lsts@EKC
+       {\ifnum\lst@mode=\lst@KCmode
+          \lst@AddTokenToStream \lst@EndKeywordCommentClose
+        \else\ifnum\lst@mode=\lst@KCSmode
+          \lst@AddTokenToStream \lst@EndKeywordCommentClose
+        \fi \fi
+        \lsts@EKC}%
+   \fi}
+%    \end{macrocode}
+% The working procedures enter respectively leave comment mode.
+% Note that we only need to test against |\lst@KCmode| since |\lst@KCSmode|
+%  deactivates the working procedures: they don't get executed in that case.
+%    \begin{macrocode}
+\gdef\lst@KCAWorkB{%
+  \ifnum\lst@mode=\lst@KCmode\else \lst@BeginKeywordComment\lst@KCmode \fi}
+\gdef\lst@KCBWorkB{%
+  \ifnum\lst@mode=\lst@KCmode\else \lst@BeginKeywordComment\lst@KCSmode \fi}
+\gdef\lst@KCAWorkE{\ifnum\lst@mode=\lst@KCmode \lst@EndKeywordComment \fi}
+%    \end{macrocode}
+% Now we install the tests and initialize the given macros.
+%    \begin{macrocode}
+\lst@ProvideClass@@
+  \lst@KCAkeywordsB@list\lst@KCAkeywordsB \lst@KC@also
+  \lst@gKCAkeywordsB@list\lst@gKCAkeywordsB \lst@KCAWorkB
+  {kcb}{keywordcomment}l% prefix, name, language key, detect keyword
+\lst@ProvideClass@@
+  \lst@KCAkeywordsE@list\lst@KCAkeywordsE \lst@KC@also
+  \lst@gKCAkeywordsE@list\lst@gKCAkeywordsE \lst@KCAWorkE
+  {kce}{keywordcomment}l%
+\lst@ProvideClass@@
+  \lst@KCBkeywordsB@list\lst@KCBkeywordsB \lst@KC@also
+  \lst@gKCBkeywordsB@list\lst@gKCBkeywordsB \lst@KCBWorkB
+  {kcs}{keywordcomment}l%
+%    \end{macrocode}
+% \end{lstkey}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Hyper references}
+%
+% \begin{aspect}{hyper}
+%    \begin{macrocode}
+\lst@BeginAspect{hyper,%
+        hyperanchor,hyperlink,hyperref,morehyperref,deletehyperref}
+%    \end{macrocode}
+%
+% \begin{lstkey}{hyperanchor}
+% \begin{lstkey}{hyperlink}
+% The keys define the macros to set an anchor and a link.
+%    \begin{macrocode}
+\lst@Key{hyperanchor}\hyper@@anchor{\let\lst@hyperanchor#1}
+\lst@Key{hyperlink}\hyperlink{\let\lst@hyperlink#1}
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+%
+% The main thing is a special working procedure.
+% First we extract the contents of |\lst@token| and get a free macro name for
+%  this current character string (using prefix |lstHR@| and a number as suffix).
+% Then we make this free macro equivalent to |\@empty|, so it is not used the
+%  next time.
+%    \begin{macrocode}
+\lst@InstallClass{h}{hyperref}{}\relax{}
+  {\edef\lst@temp{\the\lst@token}%
+   \lst@GetFreeMacro{lstHR@\lst@temp}%
+   \global\expandafter\let\lst@freemacro\@empty
+%    \end{macrocode}
+% |\@tempcnta| is the suffix of the free macro.
+% We use it here to refer to the last occurence of the same string.
+% To do this, we redefine |\lst@alloverstyle| to set an anchor \ldots
+%    \begin{macrocode}
+   \@tempcntb\@tempcnta \advance\@tempcntb\m@ne
+   \edef\lst@alloverstyle##1{%
+       \let\noexpand\lst@alloverstyle\noexpand\@empty
+       \noexpand\smash{\raise\baselineskip\hbox
+           {\noexpand\lst@hyperanchor{lst.\@gtempa\the\@tempcnta}%
+                                     {\relax}}}%
+%    \end{macrocode}
+% \ldots\space and a link to the last occurence (if there is any).
+%    \begin{macrocode}
+       \ifnum\@tempcnta=\z@ ##1\else
+         \noexpand\lst@hyperlink{lst.\@gtempa\the\@tempcntb}{##1}%
+       \fi}%
+  }o
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \section{Special delimiters}
+%
+%
+% \subsection{Strings}
+%
+% \begin{aspect}{strings}
+% This aspects uses its own mode class---just like \keyname{delim}.
+%    \begin{macrocode}
+\lst@BeginAspect{strings,%
+        string,morestring,deletestring,stringstyle,showstringspaces}
+\lst@NewModeClass{strings}{true}{false}
+%    \end{macrocode}
+%
+% \begin{lstkey}{showstringspaces}
+% This key uses the string mode set.
+%    \begin{macrocode}
+\lst@Key{showstringspaces}t[t]{\lstKV@SetIf{#1}\lst@ifshowstringspaces}
+%    \end{macrocode}
+% This is called whenever a string starts.
+% If the user requests visible spaces in strings, we need to turn it on when the
+% characters are processed---so we can't do it right here.
+% Instead we insert a |\lst@ProcessPushStyle| to the token stream.
+%    \begin{macrocode}
+\lst@AddTo\lst@modeset@strings{%
+  \lst@ifshowstringspaces \lst@ifshowspaces\else \lst@AddToTokenStream{%
+    \lst@ProcessPushStyle
+        {}{\lst@keepspacestrue \let\lst@outputspace\lst@visiblespace}%
+        \lst@outputspace}%
+%    \end{macrocode}
+% This puts the meaning of |\lst@outputspace| into the (nonpushed) stack item.
+% Then the second argument is executed, which selects the proper settings.
+%
+% |\lst@ProcessPopStyle| at the end of a string restores things.
+%    \begin{macrocode}
+    \lst@AddToStackItem{\lst@AddToTokenStream{\lst@ProcessPopStyle{}{}{}}}%
+  \fi \fi}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@StringKey}
+% We put together the arguments for |\lst@Delim| and \ldots
+%    \begin{macrocode}
+\gdef\lst@StringKey#1#2{%
+  \lst@Delim\lst@stringstyle #2\relax{String}#1%
+          {\lst@BeginDelim\lst@EndDelim}%
+    \@@end{\lst@BeginDelim\lst@EndDelim}{\lst@BeginDelim\lst@EndDelim}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{string}
+% \begin{lstkey}{morestring}
+% \begin{lstkey}{deletestring}
+% use the new definition here.
+%    \begin{macrocode}
+\lst@Key{string}\relax{\lst@StringKey\@empty{#1}}
+\lst@Key{morestring}\relax{\lst@StringKey\relax{#1}}
+\lst@Key{deletestring}\relax{\lst@StringKey\@nnil{#1}}
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{lstkey}{stringstyle}
+% You shouldn't need comments on the following two lines, do you?
+%    \begin{macrocode}
+\lst@Key{stringstyle}{\ttfamily}{\def\lst@stringstyle{#1}}
+\lst@AddToHook{EmptyStyle}{\let\lst@stringstyle\@empty}
+\global\let\lst@stringstyle\@empty
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@DefStringBE}
+% This macro is a kind of combination of |\lst@DefDelimB| and |E|.
+% We leave the string mode or test whether it is allowed to start a string.
+%    \begin{macrocode}
+\gdef\lst@DefStringBE#1#2#3#4#5#6#7{%
+  \lst@CDef{#1}#2{}%
+    {\let\lst@bnext\lst@CArgEmpty
+     \ifnum #3=\lst@mode
+       \let\lst@bnext#6%
+     \else
+       \lst@ifstrings
+         #4%
+         \def\lst@bnext{#5{#3}{#7}}%
+       \fi
+     \fi
+     \lst@bnext}%
+    \@empty}
+%    \end{macrocode}
+% This or a similar macro is not required by the following string definitions.
+% They could call |\lst@DefDelimB| and then |\lst@DefDelimE| instead.
+% \end{macro}
+%
+% And now all the |\lst@StringDM@|\meta{type} definitions.
+%
+% \begin{macro}{\lst@StringDM@d}
+% `d' means no extra work.
+%    \begin{macrocode}
+\gdef\lst@StringDM@d#1#2\@empty{%
+  \lst@CArg #2\relax\lst@DefStringBE{#1}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@StringDM@b}
+% 'b' first defines the escape character for the string and then calls
+%  |\lst@StringDM@d|.
+%    \begin{macrocode}
+\gdef\lst@StringDM@b{%
+  \def\lst@stringescape{\\}%
+  \lst@StringDM@d}
+\global\let\lst@stringescape\@empty
+%    \end{macrocode}
+% We catch the escape character at the beginning of a string.
+%    \begin{macrocode}
+\lst@AddTo\lst@modeset@strings{%
+  \ifx\lst@stringescape\@empty\else
+     \expandafter\lst@LetSaveDef\expandafter{\expandafter`\lst@stringescape}%
+       \lst@stringescape@saved\lst@ScanStringEscape
+  \fi}
+%    \end{macrocode}
+% First we have to respect the |\lst@scanifx| construction of section
+%  \ref{iSimpleTokenizing}.
+% For this we |\lst@scanifx|-test the scan class agaist |\relax|, which gives
+%  true if and only if low-level scanning is turned off.
+% The old meaning takes care of that.
+%    \begin{macrocode}
+\gdef\lst@ScanStringEscape#1{%
+  \lst@scanifx\lst@scanclass\relax
+    \def\lst@next{\lst@stringescape@saved#1}%
+  \else
+%    \end{macrocode}
+% If we're not at the end of a line, the escape character let us scan the next
+%  character low-level only.
+% Note that we duplicate the next character in the middle and gobble it at the
+%  end.
+%    \begin{macrocode}
+    \def\lst@next{\lst@IfNextCharEOL{\lst@stringescape@saved}%
+                      {\lst@AddTokenToStream
+                       \lst@ScanToken\lst@scan@m{\lst@stringescape@saved#1}%
+                       \expandafter\lst@ScanNextChar\@gobble}%
+                      #1}%
+  \fi
+  \lst@next}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@StringDM@bd}
+% \begin{macro}{\lst@StringDM@db}
+% are just the same and the same as |\lst@StringDM@b|.
+%    \begin{macrocode}
+\global\let\lst@StringDM@bd\lst@StringDM@b
+\global\let\lst@StringDM@db\lst@StringDM@bd
+%    \end{macrocode}
+% \end{macro}\end{macro}
+%
+% \begin{macro}{\lst@StringDM@m}
+% is for Matlab.
+% The gobbling of `enter string' is cancelled (i.e.~we begin a string) if the
+% last token is neither an identifier, nor a number, nor a closing delimiter
+% and if the last character is neither a dot, nor a prime.
+%    \begin{macrocode}
+\gdef\lst@StringDM@m#1#2\@empty{%
+  \let\lst@stringescape\@empty
+  \lst@CArg #2\relax\lst@DefStringBE{#1}%
+      {\let\lst@next\@gobblethree
+       \ifx\lst@scanclass\lst@scan@i\else
+       \ifx\lst@scanclass\lst@scan@n\else
+       \ifx\lst@scanclass\lst@scan@delimclose\else
+       \ifx\lst@recentchar\lst@umdot\else
+       \ifx\lst@recentchar\lst@umprime\else
+         \lst\lst@next\@empty
+       \fi \fi \fi \fi \fi
+       \lst@next}}
+%    \end{macrocode}
+% Get the character definitions and make them global.
+%    \begin{macrocode}
+\lst@GetScanChar\.\lst@umdot
+\lst@GetScanChar\'\lst@umprime
+\global\let\lst@umdot\lst@umdot
+\global\let\lst@umprime\lst@umprime
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@StringDM@s}
+% is for arbitrary string-delimited strings, just as for comments.
+% This is needed for Ruby, and possibly other languages.
+%    \begin{macrocode}
+\gdef\lst@StringDM@s#1#2#3\@empty#4#5#6{%
+  \lst@CArg #2\relax\lst@DefDelimB{}%
+      {\lst@ifstrings \def\lst@bnext{#4{#1}{#6}}\fi}%
+  \lst@CArg #3\relax\lst@DefDelimE{}%
+      {\ifnum #1=\lst@mode \let\lst@enext#5\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+% \begin{aspect}{[mf]strings}
+% For MetaFont and MetaPost we now define macros to print the input-filenames
+%  in stringstyle.
+%    \begin{macrocode}
+\lst@BeginAspect{[mf]strings}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@mfinputmode}
+% \begin{macro}{\lst@String@mf}
+% Note that |\lst@mfinputmode| does not change the mode settings (one star) and
+%  thus allows other modes by default.
+%    \begin{macrocode}
+\lst@NewMode*[strings]\lst@mfinputmode
+%    \end{macrocode}
+% We define the given delimiter |#1| to start the special string if |#1| is not
+%  part of an identifier.
+%    \begin{macrocode}
+\gdef\lst@String@mf#1\@empty#2#3#4{%
+  \lst@CArg #1\relax\lst@DefDelimB
+    {}%
+    {\lst@ifstrings
+       \ifx\lst@scanclass\lst@scan@i\else
+         \def\lst@bnext{\lst@BeginDelimExclude\lst@mfinputmode
+                        {#4\lst@Lmodetrue}}%
+       \fi
+     \fi}%
+%    \end{macrocode}
+% Semicolon and space are redefined to end the string if one is in progress.
+% We make the adjustment only once when selecting the character table.
+%    \begin{macrocode}
+  \@ifundefined{lst@mfinputindicator}%
+  {\let\lst@mfinputindicator\@empty
+   \lst@CArg ;\relax\lst@DefDelimE{}%
+     {\ifnum\lst@mode=\lst@mfinputmode
+          \let\lst@enext\lst@EndDelimExclude
+      \fi}%
+   \lst@CArg\ \relax\lst@DefDelimE{}%
+     {\ifnum\lst@mode=\lst@mfinputmode
+          \let\lst@enext\lst@EndDelimExclude
+      \fi}%
+  }{}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Comments}
+%
+% \begin{aspect}{comments}
+% That's what we are working on.
+%    \begin{macrocode}
+\lst@BeginAspect{comments,%
+        comment,morecomment,deletecomment,commentstyle,texcl}
+\lst@NewModeClass{comments}{true}{false}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@commentmode}
+% is a general purpose mode for comments.
+%    \begin{macrocode}
+\lst@NewMode[comments]\lst@commentmode
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{comment}
+% \begin{lstkey}{morecomment}
+% \begin{lstkey}{deletecomment}
+% \begin{macro}{\lst@Comment}
+% The keys are easy since defined in terms of |\lst@Comment|.
+%    \begin{macrocode}
+\lst@Key{comment}\relax{\lst@Comment\@empty{#1}}
+\lst@Key{morecomment}\relax{\lst@Comment\relax{#1}}
+\lst@Key{deletecomment}\relax{\lst@Comment\@nnil{#1}}
+%    \end{macrocode}
+% Once more we put together the arguments for |\lst@Delim|.
+%    \begin{macrocode}
+\gdef\lst@Comment#1#2{%
+  \lst@Delim\lst@commentstyle #2\relax{Comment}#1%
+     {\lst@BeginDelim\lst@EndDelim}%
+    i{\lst@BeginDelimDrop\lst@EndDelimDrop}%
+     {\lst@BeginDelimInvisible\lst@EndDelimInvisible}}
+%    \end{macrocode}
+% \end{macro}
+% \end{lstkey}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{lstkey}{commentstyle}
+% Any hints necessary?
+%    \begin{macrocode}
+\lst@Key{commentstyle}{}{\def\lst@commentstyle{#1}}
+\lst@AddToHook{EmptyStyle}{\let\lst@commentstyle\itshape}
+\global\let\lst@commentstyle\itshape
+\lst@Key{texcl}{false}[t]{\lstKV@SetIf{#1}\lst@iftexcl}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% Now we provide all |\lst@Comment|[|DM|]|@|\meta{type} macros.
+%
+% \begin{macro}{\lst@CommentDM@l}
+% The only special here is that we start an escape on request.
+%    \begin{macrocode}
+\gdef\lst@CommentDM@l#1#2\@empty#3#4#5{%
+  \lst@CArg #2\relax\lst@DefDelimB{}%
+    {\lst@ifcomments
+       \def\lst@bnext{#3{#1}{#5\lst@Lmodetrue
+                             \lst@iftexcl \lst@escapetrue \fi}}%
+     \fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@CommentDM@f}
+% is slightly more work.
+% First we provide the number of preceding columns.
+%    \begin{macrocode}
+\gdef\lst@CommentDM@f#1{%
+    \@ifnextchar[{\lst@Comment@@f{#1}}%
+                 {\lst@Comment@@f{#1}[0]}}
+%    \end{macrocode}
+% We define the comment in the same way as above, but we enter comment mode
+%  if and only if the character is in column |#2| (counting from zero).
+%    \begin{macrocode}
+\gdef\lst@Comment@@f#1[#2]#3\@empty#4#5#6{%
+  \lst@CArg #3\relax\lst@DefDelimB{}
+    {\lst@ifcomments
+       \ifnum#2=\lst@currcolumn\relax
+         \def\lst@bnext{#4{#1}{#6\lst@Lmodetrue
+                               \lst@iftexcl \lst@escapetrue \fi}}%
+       \fi
+     \fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@CommentDM@s}
+% Nothing special here.
+%    \begin{macrocode}
+\gdef\lst@CommentDM@s#1#2#3\@empty#4#5#6{%
+  \lst@CArg #2\relax\lst@DefDelimB{}%
+    {\lst@ifcomments \def\lst@bnext{#4{#1}{#6}}\fi}%
+  \lst@CArg #3\relax\lst@DefDelimE{}%
+    {\ifnum #1=\lst@mode \let\lst@enext#5\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@CommentDM@n}
+% We either give an error message or define the nested comment.
+%    \begin{macrocode}
+\gdef\lst@CommentDM@n#1#2#3\@empty#4#5#6{%
+  \ifx\@empty#3\@empty\else
+    \def\@tempa{#2}\def\@tempb{#3}%
+    \ifx\@tempa\@tempb
+      \lst@Error{Identical delimiters}%
+      {These delimiters make no sense in nested mode.}%
+    \else
+%    \end{macrocode}
+% If we already process that type of comment, the delimiter enters the mode
+%  again.
+% We also start and end the comment as in |\lst@CommentDM@s|.
+%    \begin{macrocode}
+      \lst@CArg #2\relax\lst@DefDelimB{}%
+        {\ifnum #1=\lst@mode \def\lst@bnext{#4{#1}{#6}}\fi
+         \lst@ifcomments \def\lst@bnext{#4{#1}{#6}}\fi}
+      \lst@CArg #3\relax\lst@DefDelimE{}%
+        {\ifnum #1=\lst@mode \let\lst@enext#5\fi}%
+    \fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+% \begin{aspect}{pod}
+% POD is defined as a separate aspect.
+%    \begin{macrocode}
+\lst@BeginAspect[comments]{[pod]comments,printpod}
+%    \end{macrocode}
+%
+% \begin{lstkey}{printpod}
+% The only user key---\keyname{podcomment} has been removed.
+%    \begin{macrocode}
+\lst@Key{printpod}{false}[t]{\lstKV@SetIf{#1}\lst@ifprintpod}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@PODmode}
+% is the static mode for POD.
+%    \begin{macrocode}
+\lst@NewMode[comments]\lst@PODmode
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@Comment@pod}
+% We now use the same scheme as other comments.
+% If the delimiter is found, if comments are allowed, and if we're in the first
+%  column (i.e.~column |\z@|), we start the POD.
+% We use either the supplied macro |#2| or we drop the contents.
+%    \begin{macrocode}
+\gdef\lst@Comment@pod#1\@empty#2#3#4{%
+  \lst@CArg #1\relax\lst@DefDelimB{}%
+      {\lst@ifcomments \ifnum\lst@currcolumn=\z@
+         \lst@ifprintpod
+           \def\lst@bnext{#2\lst@PODmode{#4}}
+         \else
+           \def\lst@bnext{\lst@BeginDelimDrop\lst@PODmode{}}%
+         \fi
+       \fi \fi}%
+  \lst@CArg #1cut\relax\lst@DefDelimE{}%
+%    \end{macrocode}
+% If we find the delimiter plus |cut| in the first column in |\lst@PODmode|, we
+%  check for a following end of line.
+%    \begin{macrocode}
+      {\ifnum\lst@PODmode=\lst@mode \ifnum\lst@currcolumn=\z@
+         \def\lst@enext{\lst@PODCheckEnd#3}%
+       \fi \fi}}
+%    \end{macrocode}
+% If it's there, we end the POD (and might need to correct the printed line
+%  number and the number of empty lines).
+%    \begin{macrocode}
+\gdef\lst@PODCheckEnd#1#2\@empty{%
+  \lst@IfNextCharEOL{\lst@ifprintpod
+                       \expandafter#1%
+                     \else
+                       \ifdefined\c@lstnumber\global\advance\c@lstnumber\m@ne\fi
+                       \advance\lst@emptylines\m@ne
+                       \expandafter\lst@EndDelimDrop
+                     \fi
+                     #2\@empty}%
+                    {#2}}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Tags}
+%
+% \begin{aspect}{html}
+% Support for HTML and other markup languages.
+%    \begin{macrocode}
+\lst@BeginAspect[keywords]{html,%
+        tag,moretag,tagstyle,usekeywordsintag,markfirstintag}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@tagmode}
+% We define a new mode class and allocate the static mode.
+%    \begin{macrocode}
+\lst@NewModeClass{tags}{false}{true}
+\lst@NewMode[tags]\lst@tagmode
+%    \end{macrocode}
+% All the features are turned on inside tags:
+%    \begin{macrocode}
+\gdef\lst@modeset@tags{\lst@InitModesT}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{tagstyle}
+% You shouldn't need comments on the following two lines, do you?
+%    \begin{macrocode}
+\lst@Key{tagstyle}{}{\def\lst@tagstyle{#1}}
+\lst@AddToHook{EmptyStyle}{\let\lst@tagstyle\@empty}
+\global\let\lst@tagstyle\@empty
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@GetTheTagStyle}
+% Defines |\lst@style| to contain the style-selection-definition for |#1|.
+%    \begin{macrocode}
+\gdef\lst@GetTheTagStyle#1{%
+  \def\lst@style{#1}%
+  \ifx\lst@style\@empty
+    \def\lst@style{\let\lst@extra\@empty}%
+  \else
+    \expandafter\lst@DelimStyle\lst@style\@nil
+    \lst@token\expandafter\expandafter\expandafter{\expandafter\@thirdofthree\lst@style}%
+    \edef\lst@style{\the\lst@token}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{usekeywordsintag}
+% \begin{lstkey}{markfirstintag}
+% The keys extract the optional style argument and save the boolean argument.
+%    \begin{macrocode}
+\lst@Key{usekeywordsintag}f[t]{\lstKV@OArg[keywordstyle]{#1}{%
+  \lst@GetTheTagStyle{##1}%
+  \let\lst@usekeysintagstyle\lst@style
+  \lstKV@SetIf{##2}\lst@ifusekeysintag}}
+\lst@Key{markfirstintag}f[t]{\lstKV@OArg[keywordstyle]{#1}{%
+  \lst@GetTheTagStyle{##1}%
+  \let\lst@markfirstintagstyle\lst@style
+  \lstKV@SetIf{##2}\lst@ifmarkfirstintag}}
+%    \end{macrocode}
+% Internally we use another (global) switch.
+%    \begin{macrocode}
+\gdef\lst@firstintagfalse{\global\let\lst@iffirstintag\iffalse}
+\lst@firstintagfalse
+%    \end{macrocode}
+% We set |\lst@extra| via |\lst@markfirstintagstyle| and reset the boolean on
+%  the first identifier in |\lst@tagmode|.
+%    \begin{macrocode}
+\lst@AddToHook{AddTokenToStream}
+  {\@empty
+   \ifnum\lst@mode=\lst@tagmode \ifx\lst@scanclass\lst@scan@i
+     \lst@iffirstintag
+       \lst@markfirstintagstyle\lst@firstintagfalse
+     \else
+%    \end{macrocode}
+% Moreover we check whether the keyword style is always to be used.
+%    \begin{macrocode}
+       \lst@ifusekeysintag\else \lst@usekeysintagstyle\fi
+     \fi
+   \fi \fi}
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@BeginTag}
+% |\lst@iffirstintag| is initialized every beginning of a tag.
+%    \begin{macrocode}
+\gdef\lst@BeginTag{%
+  \lst@DelimOpen\iftrue{\global\let\lst@iffirstintag\lst@ifmarkfirstintag}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{tag}
+% \begin{lstkey}{moretag}
+% \begin{macro}{\lst@TagKey}
+% As usual, the keys use \ldots
+%    \begin{macrocode}
+\lst@Key{tag}\relax{\lst@TagKey\@empty{#1}}
+\lst@Key{moretag}\relax{\lst@TagKey\relax{#1}}
+%    \end{macrocode}
+% a common macro, which puts together the arguments for |\lst@Delim|.
+%    \begin{macrocode}
+\gdef\lst@TagKey#1#2{%
+  \lst@Delim\lst@tagstyle #2\relax{Tag}#1%
+          {\lst@BeginTag\lst@EndDelim}%
+    \@@end{\lst@BeginTag\lst@EndDelim}{\lst@BeginTag\lst@EndDelim}}
+%    \end{macrocode}
+% \end{macro}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@Tag@s}
+% We enter |\lst@tagmode| only if tags are allowed and if we aren't in that mode
+%  already.
+%    \begin{macrocode}
+\gdef\lst@Tag@s#1#2\@empty#3#4#5{%
+  \lst@CArg #1\relax\lst@DefDelimB{}
+    {\lst@iftags \ifnum\lst@mode=\lst@tagmode\else
+         \def\lst@bnext{#3\lst@tagmode{#5}}%
+     \fi \fi}%
+  \lst@CArg #2\relax\lst@DefDelimE{}%
+    {\ifnum \lst@tagmode=\lst@mode \let\lst@enext#4\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@TagDM@cdata}
+% This type is active only in |\lst@tagmode|.
+% We separate the delimiters from the content and switch to |\lst@InitModesF|,
+%  but disable tags.
+%    \begin{macrocode}
+\gdef\lst@TagDM@cdata#1#2#3\@empty#4#5#6{%
+  \lst@CArg #2\relax\lst@DefDelimB{}
+    {\ifnum\lst@mode=\lst@tagmode
+       \def\lst@bnext{\lst@BeginDelimExclude
+                          {#1}{#6\lst@InitModesF \lst@tagsfalse}}%
+     \fi}
+  \lst@CArg #3\relax\lst@DefDelimE{}%
+    {\ifnum #1=\lst@mode \let\lst@enext\lst@EndDelimExclude \fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@TagDM@entity}
+% \begin{lstkey}{entitystyle}
+% Define new delimiter and style key for entities.
+%    \begin{macrocode}
+\gdef\lst@TagDM@entity#1#2#3\@empty#4#5#6{%
+  \lst@CArg #2\relax\lst@DefDelimB{}
+    {\lst@ifidentifiers\else
+       \def\lst@bnext{\lst@BeginDelim{#1}%
+                      {\lst@SelectStyle\lst@ProcessSetStyle
+                           {\let\lst@extra\lst@entitystyle}}}%
+     \fi}%
+  \lst@CArg #3\relax\lst@DefDelimE{}%
+    {\ifnum #1=\lst@mode \let\lst@enext\lst@EndDelim \fi}}%
+%    \end{macrocode}
+%    \begin{macrocode}
+\lst@Key{entitystyle}{}{\def\lst@entitystyle{#1}}%
+%    \end{macrocode}
+% \end{lstkey}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Transcriptions}
+%
+% \begin{aspect}{transcribe}
+% It is not that obvious, but transcriptions belong to delimiters.
+% They delimit themselves, have their own scanning class, and replace the
+%  original character sequences on processing.
+%    \begin{macrocode}
+\lst@BeginAspect{transcribe,%
+        transcribe,moretranscribe,deletetranscribe}
+\lst@NewModeClass{transcribe}{true}{false}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@TranDef}
+% This macro will define the scanning part of a transcription.
+% If not active the characters pass by via |\lst@CArgEmpty|.
+%    \begin{macrocode}
+\gdef\lst@TranDef#1\@empty{%
+  \lst@CArg #1\relax\lst@CDef {}%
+      {\lst@iftranscribe \expandafter\lst@TranScan
+                   \else \expandafter\lst@CArgEmpty \fi}%
+      \@empty}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@TranScan}
+% If active we scan the original with its own class and put it into the token
+%  stream.
+%    \begin{macrocode}
+\gdef\lst@TranScan#1\@empty{%
+  \lst@AddTokenToStream
+  \lst@ScanToken\lst@scan@tran{#1}%
+  \lst@AddTokenToStream
+  \lst@ScanNextChar}
+%    \end{macrocode}
+%    \begin{macrocode}
+\gdef\lst@scan@tran{tran}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@Process@trans}
+% On processing we replace the first two arguments by the transcription content.
+%    \begin{macrocode}
+\global\@namedef{\@lst Process@\lst@scan@tran}#1#2{%
+  \expandafter\expandafter\expandafter
+  \lst@Process@m\csname\@lst trans@#1\endcsname}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{transcribe}
+% As usual, the keys use a common definition.
+%    \begin{macrocode}
+\lst@Key{transcribe}\relax{\lst@Transcribe\@empty #1{}{}{}\@nil}
+\lst@Key{moretranscribe}\relax{\lst@Transcribe\relax #1{}{}{}\@nil}
+\lst@Key{deletetranscribe}\relax{\lst@Transcribe\@nnil {#1}{}{}\@nil}
+%    \end{macrocode}
+%    \begin{macrocode}
+\global\let\lst@transcribe\@empty
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@Transcribe}
+% For the \keyname{transcribe} key we delete all transcriptions; first the
+%  contents, then the delimiters.
+%    \begin{macrocode}
+\gdef\lst@Transcribe#1#2#3#4#5\@nil{%
+  \ifx #1\@empty
+    \lst@for \lst@transcribe\do
+    {\ifx\@empty##1\@empty\else
+       \expandafter\let\csname\@lst trans@##1\endcsname\lst@undefined
+     \fi}%
+    \let\lst@transcribe\@empty
+    \lst@RedefDeleteClass{TranDef}%
+  \fi
+%    \end{macrocode}
+% A nonempty \meta{original} needs conversion first.
+%    \begin{macrocode}
+  \ifx\@empty#2\@empty\else
+    \let\lst@arg\@empty \lst@RedefConvert#2\@nnil
+%    \end{macrocode}
+% \keyname{deletetranscribe} removes the transcription: the contents, \ldots
+%    \begin{macrocode}
+    \ifx #1\@nnil
+      \expandafter\let\csname\@lst trans@\lst@arg\endcsname\lst@undefined
+%    \end{macrocode}
+% the delimiter, \ldots
+%    \begin{macrocode}
+      \expandafter\lst@RedefDelete\expandafter\lst@TranDef
+                                  \expandafter{\lst@arg}%
+%    \end{macrocode}
+% and \meta{original} from |\lst@transcribe|.
+%    \begin{macrocode}
+      \lst@RemoveItemsFrom\lst@transcribe\lst@arg
+    \else
+%    \end{macrocode}
+% \keyname{moretranscribe} adds \meta{original} to |\lst@transcribe|, inserts
+%  the declaration with its definition (three arguments altogether), \ldots
+%    \begin{macrocode}
+      \lst@elAddTo\lst@transcribe{\expandafter,\lst@arg}%
+      \edef\lst@delim{\noexpand\lst@TranDef{\lst@arg}
+                      {\noexpand\lst@TranDef \lst@arg\noexpand\@empty}}%
+      \expandafter\lst@RedefInsert\lst@delim
+%    \end{macrocode}
+% and defines the content of the transcription.
+% For this we parse the replacement and \ldots
+%    \begin{macrocode}
+      \let\lst@delim\lst@arg \let\lst@arg\@empty
+      \lst@TranConvert #3\@nnil
+      \ifx\@empty#4\@empty
+        \setbox\z@\hbox{\lst@arg}\@tempdimb\lst@widthfixed
+        \@tempdima \dimexpr(\wd0+0.5\@tempdimb)*65536/\@tempdimb\relax
+        \edef\lst@temp{\strip@pt\@tempdima}%
+      \else
+        \lst@length#4\edef\lst@temp{\the\lst@length}%
+      \fi
+%    \end{macrocode}
+% define |\lst@trans@|\meta{original} to contain the replacement and length.
+% Note that this is an unusual way to set the length since |\lst@temp| could
+%  contain a fraction.
+%    \begin{macrocode}
+      \lst@token\expandafter{\lst@arg}%
+      \edef\lst@arg{{\the\lst@token}{\z@\def\noexpand\lst@length{\lst@temp}}}%
+      \expandafter\let\csname\@lst trans@\lst@delim\endcsname\lst@arg
+    \fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@TranConvert}
+% A braced argument is added directly to |\lst@arg|.
+% If we find |$|, |\(|, or |\ensuremath| we will read the math material and
+%  convert it.
+% Any other |\@let@token| will convert the material \ldots
+%    \begin{macrocode}
+\gdef\lst@TranConvert{%
+  \@ifnextchar\bgroup
+      \lst@TranConvertAdd
+      {\ifx $\@let@token \let\lst@next\lst@TranConvertDMath \else
+       \ifx \(\@let@token \let\lst@next\lst@TranConvertPMath \else
+       \ifx \ensuremath\@let@token \let\lst@next\lst@TranConvertEMath
+       \else \let\lst@next\lst@TranConvert@
+       \fi \fi \fi
+       \lst@next}}
+%    \end{macrocode}
+% up to |\@nnil| token by token.
+%    \begin{macrocode}
+\gdef\lst@TranConvert@#1{%
+  \ifx #1\@nnil\else
+    \lst@lAddTo\lst@arg{#1}\expandafter\lst@TranConvert
+  \fi}
+%    \end{macrocode}
+% The following macro reads the (braced) argument, adds it with braces to
+%  |\lst@arg|, and continues conversion.
+%    \begin{macrocode}
+\gdef\lst@TranConvertAdd#1{\lst@lAddTo\lst@arg{{#1}}\lst@TranConvert}
+%    \end{macrocode}
+% The various macro for math material read the material and give it (terminated
+%  by |\@nnil|) eventually to |\lst@TranConvertMath|.
+%    \begin{macrocode}
+\gdef\lst@TranConvertDMath$#1${\lst@TranConvertEMath{#1}}
+\gdef\lst@TranConvertPMath\(#1\){\lst@TranConvertEMath{#1}}
+\gdef\lst@TranConvertEMath#1{%
+  \lst@TranConvertMath #1\@nnil
+  \lst@TranConvert}
+%    \end{macrocode}
+% Each `math token' gets braced and |$|ed (what's the verb for this?) and is
+%  added to |\lst@arg|.
+%    \begin{macrocode}
+\gdef\lst@TranConvertMath#1{%
+  \ifx #1\@nnil\else
+    \lst@lAddTo\lst@arg{{$#1$}}\expandafter\lst@TranConvertMath
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \section{Special aspects}
+%
+%
+% \subsection{Styles and languages}
+%
+% \begin{aspect}{style}
+%    \begin{macrocode}
+\lst@BeginAspect{style,%
+        style,stylefiles}
+%    \end{macrocode}
+%
+% \begin{lstkey}{stylefiles}
+% \begin{macro}{\lststylefiles}
+% The key forwards the argument to |\lst@DefDriverFiles|.
+%    \begin{macrocode}
+\lst@Key{stylefiles}\relax{\lst@DefDriverFiles\lststylefiles{#1}}
+%    \end{macrocode}
+% We use this key (directly) to set a default if necessary.
+%    \begin{macrocode}
+\@ifundefined{lststylefiles}
+{\KV@lst@stylefiles{lststyles0.sty,lststyles.sty}}
+{\KV@lst@stylefiles\lststylefiles}
+%    \end{macrocode}
+% \end{macro}
+% \end{lstkey}
+%
+% \begin{macro}{\lstdefinestyle}
+% \begin{macro}{\lst@definestyle}
+% are defined in terms of |\lst@DefDriver|.
+%    \begin{macrocode}
+\lst@UserCommand\lstdefinestyle{\lst@DefDriver\iftrue{style}\lstsetup}
+\lst@UserCommand\lst@definestyle{\lst@DefDriver\iffalse{style}\lstsetup}
+%    \end{macrocode}
+% The `empty' style calls the hook \hookname{EmptyStyle}.
+%    \begin{macrocode}
+\global\@namedef{lststyle@[]}{\lsthk@EmptyStyle}
+\lst@AddToHook{EmptyStyle}{}% init
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{lstkey}{style}
+% is an application of |\lst@SetDriver|.
+% We just specify the hook as `pre' and an empty argument as `post' code.
+%    \begin{macrocode}
+\lst@Key{style}\relax{\lst@SetDriver{style}{#1}\lststylefiles\lsthk@SetStyle{}}
+\lst@AddToHook{SetStyle}{}% init
+%    \end{macrocode}
+% \end{lstkey}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+% \begin{aspect}{language}
+% Now we deal with commands used in defining and selecting programming
+% languages, in particular with aliases.
+%    \begin{macrocode}
+\lst@BeginAspect{language,%
+        language,languagefiles,languagealias,defaultdialect,loadlanguages}
+%    \end{macrocode}
+%
+% \begin{lstkey}{languagefiles}
+% \begin{macro}{\lstlanguagefiles}
+% Just like \keyname{stylefiles} and |\lststylefiles|.
+%    \begin{macrocode}
+\lst@Key{languagefiles}\relax{\lst@DefDriverFiles\lstlanguagefiles{#1}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\@ifundefined{lstlanguagefiles}
+{\KV@lst@languagefiles{lstlang0.sty}}
+{\KV@lst@languagefiles\lstlanguagefiles}
+%    \end{macrocode}
+% \end{macro}
+% \end{lstkey}
+%
+% \begin{macro}{\lstdefinelanguage}
+% \begin{macro}{\lst@definelanguage}
+% Ditto.
+%    \begin{macrocode}
+\lst@UserCommand\lstdefinelanguage{\lst@DefDriver\iftrue{language}\lstsetup}
+\lst@UserCommand\lst@definelanguage{\lst@DefDriver\iffalse{language}\lstsetup}
+%    \end{macrocode}
+% Now we provide the empty language.
+%    \begin{macrocode}
+\global\@namedef{lstlanguage@[]}{}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{lstkey}{language}
+% \begin{lstkey}{alsolanguage}
+% is mainly an application of |\lst@SetDriver|.
+%    \begin{macrocode}
+\lst@Key{language}\relax{%
+  \lst@SetDriver{language}{#1}\lstlanguagefiles\lsthk@SetLanguage{}}
+%    \end{macrocode}
+% Ditto, we simply don't execute |\lsthk@SetLanguage|.
+%    \begin{macrocode}
+\lst@Key{alsolanguage}\relax{%
+  \lst@SetDriver{language}{#1}\lstlanguagefiles{}{}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\lst@AddToHook{SetLanguage}{}% init
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{macro}{\lstalias}
+% \begin{lstkey}{languagealias}
+% \begin{lstkey}{defaultdialect}
+% The macro and the keys use some kernel macros.
+%    \begin{macrocode}
+\lst@UserCommand\lstalias{\lst@SetDriverAlias{language}}
+\lst@Key{languagealias}\relax{\lst@SetDriverAlias{language}#1}
+\lst@Key{defaultdialect}\relax{\lst@SetDriverDefault{language}{#1}}
+\global\let\lst@languagealias\@empty
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+% \end{macro}
+%
+% \begin{lstkey}{loadlanguages}
+% \begin{macro}{\lstloadlanguages}
+% These `definitions' will be equivalent.
+% We request the given list of languages, which also loads required aspects.
+%    \begin{macrocode}
+\lst@Key{loadlanguages}\relax{\lst@RequireDrivers{language}{#1}}
+\global\let\lstloadlanguages\KV@lst@loadlanguages
+%    \end{macrocode}
+% \end{macro}
+% \end{lstkey}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Frames}
+%
+% \begin{aspect}{frames}
+% This is a rather long aspect---so stay tuned.
+%    \begin{macrocode}
+\lst@BeginAspect{frames,%
+        rulesep,framerule,framesep,framexleftmargin,framexrightmargin,%
+        framextopmargin,framexbottommargin,backgroundcolor,fillcolor,%
+        rulecolor,rulesepcolor,frameround,frame,frameshape}
+%    \end{macrocode}
+%
+% \begin{lstkey}{rulesep}
+% \begin{lstkey}{framerule}
+% \begin{lstkey}{framesep}
+% The keys save their argument.
+%    \begin{macrocode}
+\lst@Key{rulesep}{2pt}{\def\lst@rulesep{#1}}
+\lst@Key{framerule}{.4pt}{\def\lst@framerulewidth{#1}}
+\lst@Key{framesep}{3pt}{\def\lst@frametextsep{#1}}
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{lstkey}{framexleftmargin}
+% \begin{lstkey}{framexrightmargin}
+% \begin{lstkey}{framextopmargin}
+% \begin{lstkey}{framexbottommargin}
+% Ditto.
+%    \begin{macrocode}
+\lst@Key{framexleftmargin}{\z@}{\def\lst@framexleftmargin{#1}}
+\lst@Key{framexrightmargin}{\z@}{\def\lst@framexrightmargin{#1}}
+\lst@Key{framextopmargin}{\z@}{\def\lst@framextopmargin{#1}}
+\lst@Key{framexbottommargin}{\z@}{\def\lst@framexbottommargin{#1}}
+%    \end{macrocode}
+% If frames are active, we need to adjust line width and left margin.
+%    \begin{macrocode}
+\lst@AddToHook{InitVarsDisplay}
+  {\lst@ifframe
+     \edef\lst@linewidth{\dimexpr\lst@linewidth-\lst@framexleftmargin
+                                               -\lst@framexrightmargin}%
+     \advance\@totalleftmargin\lst@framexleftmargin
+   \fi}
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{lstkey}{backgroundcolor}
+% Save the argument and \ldots
+%    \begin{macrocode}
+\lst@Key{backgroundcolor}{}{\def\lst@bkgcolor{#1}}
+\lst@Key{fillcolor}{}{\def\lst@fillcolor{#1}}
+\lst@Key{rulecolor}{}{\def\lst@rulecolor{#1}}
+\lst@Key{rulesepcolor}{}{\def\lst@rulesepcolor{#1}}
+%    \end{macrocode}
+% provide default settings.
+%    \begin{macrocode}
+\lst@AddToHook{InitVarsDisplay}
+  {\ifx\lst@fillcolor\@empty \let\lst@fillcolor\lst@bkgcolor \fi
+   \ifx\lst@fillcolor\@empty \ifx\lst@rulesepcolor\@empty\else
+     \def\lst@fillcolor{\color{white}}%
+   \fi \fi
+   \ifx\lst@rulesepcolor\@empty \let\lst@rulesepcolor\lst@fillcolor \fi
+   \ifx\lst@bkgcolor\@empty\else
+     \let\lst@ifframe\iftrue \@gobbletwo\fi\fi
+   \fi}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{lstkey}{frameround}
+% We first check the optional argument and (try to) switch to that package.
+%    \begin{macrocode}
+\lst@Key{frameround}\relax[true]{\lstKV@OArg[]{#1}{%
+  \ifx\@empty##1\@empty\else \lst@FrameUseDrawPackage{##1}\fi
+%    \end{macrocode}
+% The second argument determines |\lst@frameround|, which \ldots
+%    \begin{macrocode}
+  \lstKV@SwitchCases{##2}%
+  {true&\def\lst@frameround{TTTT}\\%
+   false&\let\lst@frameround\@empty
+  }{\uppercase{\def\lst@frameround{##2}}}%
+%    \end{macrocode}
+% is used to parse the frame data (again).
+%    \begin{macrocode}
+  \expandafter\lst@FrameParse\lst@frameround ffff\relax}}
+\global\let\lst@frameround\@empty
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{lstkey}{frame}
+% In case of an verbose argument, we define |\lst@frame| according to the name.
+% Otherwise we use the argument directly for |\lst@frame|.
+%    \begin{macrocode}
+\lst@Key{frame}\relax{%
+  \let\lst@xrulecolor\@empty
+  \lstKV@SwitchCases{#1}%
+  {none&\let\lst@frame\@empty\\%
+   leftline&\def\lst@frame{l}\\%
+   topline&\def\lst@frame{t}\\%
+   bottomline&\def\lst@frame{b}\\%
+   lines&\def\lst@frame{tb}\\%
+   single&\def\lst@frame{trbl}\\%
+   shadowbox&\def\lst@frame{tRBl}%
+             \def\lst@xrulecolor{\lst@rulesepcolor}%
+             \def\lst@rulesep{\lst@frametextsep}%
+  }{\def\lst@frame{#1}}%
+  \expandafter\lst@FrameParse\lst@frameround ffff\relax}
+\global\let\lst@frame\@empty
+%    \end{macrocode}
+% At the end we've parsed the frame data exactly as in \keyname{frameround}.
+% \end{lstkey}
+%
+% \begin{macro}{\lst@FrameParse}
+% We simplify the following tests by adding |t|, |r|, |b|, and |l| if their
+%  upper case version is requested.
+%    \begin{macrocode}
+\gdef\lst@FrameParse#1#2#3#4#5\relax{%
+  \lst@IfSubstring T\lst@frame{\edef\lst@frame{t\lst@frame}}{}%
+  \lst@IfSubstring R\lst@frame{\edef\lst@frame{r\lst@frame}}{}%
+  \lst@IfSubstring B\lst@frame{\edef\lst@frame{b\lst@frame}}{}%
+  \lst@IfSubstring L\lst@frame{\edef\lst@frame{l\lst@frame}}{}%
+%    \end{macrocode}
+% Top and bottom shape are build by a submacro, see below.
+%    \begin{macrocode}
+  \let\lst@frametshape\@empty \let\lst@framebshape\@empty
+  \lst@FrameParse@TB ltr\lst@frametshape #4#1%
+  \lst@FrameParse@TB LTR\lst@frametshape #4#1%
+  \lst@FrameParse@TB lbr\lst@framebshape #3#2%
+  \lst@FrameParse@TB LBR\lst@framebshape #3#2%
+%    \end{macrocode}
+% Left and right frame shape are parsed immediately.
+%    \begin{macrocode}
+  \let\lst@type\@empty \let\lst@arg\@empty
+  \lst@IfSubstring L\lst@frame
+    {\def\lst@type{YY}}{\lst@IfSubstring l\lst@frame{\def\lst@type{Y}}{}}%
+  \lst@IfSubstring R\lst@frame
+    {\def\lst@arg{YY}}{\lst@IfSubstring r\lst@frame{\def\lst@arg{Y}}{}}%
+  \lst@FrameParseVData l\lst@type\lst@frameL
+  \lst@FrameParseVData r\lst@arg\lst@frameR
+  \lst@FrameParse@}
+%    \end{macrocode}
+% Now we set |\lst@ifframe| by expanding all shapes and testing this against an
+%  empty definition.
+% And finally we check for round corners.
+%    \begin{macrocode}
+\gdef\lst@FrameParse@{%
+  \edef\lst@temp{\lst@frametshape\lst@type\lst@arg\lst@framebshape}%
+  \ifx\lst@temp\@empty \lst@false \else \lst@true \fi
+  \let\lst@ifframe\lst@if
+%    \end{macrocode}
+%    \begin{macrocode}
+  \let\lst@ifframeround\iffalse
+  \lst@IfSubstring R\lst@frametshape{\let\lst@ifframeround\iftrue}{}%
+  \lst@IfSubstring R\lst@framebshape{\let\lst@ifframeround\iftrue}{}}
+%    \end{macrocode}
+% Now comes the macro used to define top and bottom frame shape.
+% |#1#2#3| are the three characters we test for.
+% The last two arguments show whether left (\texttt a) and right (\texttt b)
+%  corners are round.
+% We make the appropriate \texttt a or \texttt b definitions, \ldots
+%    \begin{macrocode}
+\gdef\lst@FrameParse@TB#1#2#3#4#5#6{%
+  \def\reserved@a{N}\let\reserved@b\reserved@a
+  \lst@IfSubstring #1\lst@frame
+      {\if #5T\def\reserved@a{R}\else \def\reserved@a{Y}\fi}{}%
+  \lst@IfSubstring #3\lst@frame
+      {\if #6T\def\reserved@b{R}\else \def\reserved@b{Y}\fi}{}%
+%    \end{macrocode}
+% and extend the top or bottom shape |#4| if |#2| is requested.
+%    \begin{macrocode}
+  \lst@IfSubstring #2\lst@frame{\edef#4{#4\reserved@a Y\reserved@b}}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameParseVData}
+% \meta{\alternative{l,r}}\meta{shape data}\meta{output data}
+%
+% The output data will be empty if the shape is empty.
+% Otherwise we start the parsing inside an |\edef|.
+%    \begin{macrocode}
+\gdef\lst@FrameParseVData#1#2#3{%
+  \ifx \@empty#2%
+    \let#3\@empty
+  \else
+    \if #1l\lst@false \else\lst@true \fi
+    \edef#3{\kern-\noexpand\lst@rulesep
+            \expandafter\lst@FrameParseVData@a#2\relax}%
+  \fi}
+%    \end{macrocode}
+% While not reaching the end, we insert space and either a rule or some more
+%  space.
+%    \begin{macrocode}
+\gdef\lst@FrameParseVData@a#1{%
+  \ifx\relax#1\else
+    \kern\noexpand\lst@rulesep
+    \if #1Y\vrule\noexpand\@width\noexpand\lst@framerulewidth
+      \else\kern\noexpand\lst@framerulewidth \fi
+    \expandafter\lst@FrameParseVData@b
+  \fi}
+%    \end{macrocode}
+% Here (i.e.~all except the first frame rule) we also insert space if we haven't
+%  reached the end.
+%    \begin{macrocode}
+\gdef\lst@FrameParseVData@b#1{%
+  \ifx\relax#1\else
+    \kern\noexpand\lst@rulesep
+    \if #1Y%
+%    \end{macrocode}
+% But on the right we choose a different rule color.
+% This is used for shadow boxes.
+%  reached the end.
+%    \begin{macrocode}
+      \lst@if \noexpand\color@begingroup \noexpand\lst@xrulecolor \fi
+      \vrule\noexpand\@width\noexpand\lst@framerulewidth
+      \lst@if \noexpand\color@endgroup \fi
+    \else
+      \kern\noexpand\lst@framerulewidth
+    \fi
+    \expandafter\lst@FrameParseVData@b
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{frameshape}
+% capitalizes all characters before reading the four arguments.
+% Then we set |\lst@ifframe|.
+%    \begin{macrocode}
+\lst@Key{frameshape}{}{%
+  \let\lst@xrulecolor\@empty
+  \uppercase{\lstKV@ReadArgs{}{\lst@frametshape\lst@type
+                               \lst@arg\lst@framebshape}{#1}}%
+%    \end{macrocode}
+% We parse the left and right shape and call another macro to do the rest
+% (setting |\lst@ifframe| and |\lst@ifframeround|).
+%    \begin{macrocode}
+  \lst@FrameParseVData l\lst@type\lst@frameL
+  \lst@FrameParseVData r\lst@arg\lst@frameR
+  \lst@FrameParse@}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@FrameInit}
+% We set/adjust frame parameters, initialize the `|\lst@pagebox|' decoration
+%  (left and right frames with background), and set the top, bottom and final
+%  decoration boxes.
+%    \begin{macrocode}
+\gdef\lst@FrameInit{%
+  \lst@ifframeround \lst@FrameSetParams \fi
+  \lst@FrameInitDecor
+  \global\setbox\lst@botdecorbox\box\voidb@x
+  \lst@FrameH\lst@topdecorbox\lst@framextopmargin t\lst@frametshape
+  \lst@FrameH\lst@finaldecorbox\lst@framexbottommargin b\lst@framebshape}
+%    \end{macrocode}
+%    \begin{macrocode}
+\lst@AddToHook{InitDisplay}{\lst@ifframe \lst@FrameInit \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@framebox}
+% \begin{macro}{\lst@FrameInitDecor}
+% |\lst@framebox| will print left and right frames and the/their background.
+% The left and right shapes are used temporarily to determine their widths.
+%    \begin{macrocode}
+\newbox\lst@framebox
+\gdef\lst@FrameInitDecor{%
+  \setbox\lst@framebox\hbox to \z@{%
+    \setbox\z@\hbox{\lst@frameL}%
+    \setbox\tw@\hbox{\lst@frameR}%
+%    \end{macrocode}
+% The background will overlap (from `behind') the rules by the half rule width.
+% This is done by making the textsep-block wider and shrinking the rulsep-block.
+%    \begin{macrocode}
+    \@tempdima \dimexpr \lst@frametextsep+\lst@framerulewidth/2\relax
+%    \end{macrocode}
+%    \begin{macrocode}
+    \ifx\lst@frameL\@empty
+      \kern-\lst@framexleftmargin\relax
+    \else
+%    \end{macrocode}
+% If we have a left frame, we determing the shrinked size, go to the very left,
+%  and set the background block(s).
+%    \begin{macrocode}
+      \@tempdimb \dimexpr \wd\z@-\lst@framerulewidth\relax
+      \kern-\dimexpr\lst@framexleftmargin+\@tempdima+\@tempdimb\relax
+      \ifx\lst@rulesepcolor\lst@fillcolor
+        \lst@FrameColorBlock\lst@fillcolor{\dimexpr\@tempdima+\@tempdimb}%
+      \else
+        \lst@FrameColorBlock\lst@rulesepcolor\@tempdimb
+        \lst@FrameColorBlock\lst@fillcolor\@tempdima
+      \fi
+    \fi
+%    \end{macrocode}
+% Then comes the |\lst@bgkcolor|ed block.
+%    \begin{macrocode}
+    \lst@FrameColorBlock\lst@bkgcolor
+      {\dimexpr\lst@framexleftmargin+\lst@linewidth+\lst@framexrightmargin}%
+%    \end{macrocode}
+% The right side is similar to the left
+%    \begin{macrocode}
+    \ifx\lst@frameR\@empty \else
+      \@tempdimb \dimexpr \wd\tw@-\lst@framerulewidth\relax
+      \ifx\lst@rulesepcolor\lst@fillcolor
+        \lst@FrameColorBlock\lst@fillcolor{\dimexpr\@tempdima+\@tempdimb}%
+      \else
+        \lst@FrameColorBlock\lst@fillcolor\@tempdima
+        \lst@FrameColorBlock\lst@rulesepcolor\@tempdimb
+      \fi
+      \kern-\dimexpr\@tempdima+\@tempdimb\relax
+    \fi
+    \kern-\dimexpr\lst@linewidth+\lst@framexrightmargin\relax
+%    \end{macrocode}
+% Now we're at the horizontal position 0 and begin with the left frame rules.
+%    \begin{macrocode}
+    \color@begingroup
+      \lst@rulecolor
+      \ifx\lst@frameL\@empty \else
+        \kern-\dimexpr\lst@framexleftmargin+\lst@frametextsep+\wd\z@\relax
+        \lst@frameL
+        \kern \dimexpr\lst@framexleftmargin+\lst@frametextsep\relax
+      \fi
+%    \end{macrocode}
+% For the frame on the right, we move forward, typeset the frame, and go back
+%  to position 0 again.
+%    \begin{macrocode}
+      \ifx\lst@frameR\@empty \else
+        \@tempdima \dimexpr\lst@linewidth+\lst@framexrightmargin
+                           +\lst@frametextsep\relax
+        \kern\@tempdima
+        \lst@frameR
+        \kern-\@tempdima \kern-\wd\tw@
+      \fi
+    \color@endgroup}%
+%    \end{macrocode}
+% The actual decoration is done by the following definition.
+% We set the height of the box to the split height and copy |\lst@framebox|.
+%    \begin{macrocode}
+  \def\lst@decoration{\ht\lst@framebox=\lst@splitht \copy\lst@framebox}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameColorBlock}
+% \meta{block color}\marg{block width}
+% inserts a |\kern| if \meta{block color} is empty or a rule of given color and
+%  width.
+%    \begin{macrocode}
+\gdef\lst@FrameColorBlock#1#2{%
+  \ifx #1\@empty \kern#2\relax
+  \else
+    \color@begingroup
+      #1%
+      \vrule\@width#2
+    \color@endgroup
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameH}
+% \marg{box}\marg{xmargin}\meta{\alternative{t,b}}\marg{shape}
+%
+% This is the central macro used to draw the top and bottom frame rules together
+%  with their background.
+% |\lst@framediml| and |\lst@framedimr| keep the current size of the left and
+%  right part of the frame.
+% |\lst@frameinner| will keep some data of the most inner frame rules, which is
+%  used to attach the background.
+% Ditto |\lst@frameouter|.
+%    \begin{macrocode}
+\gdef\lst@FrameH#1#2#3#4{%
+  \gdef\lst@framediml{\z@}\global\let\lst@framedimr\lst@framediml
+  \let\lst@frameinner\relax \let\lst@frameouter\relax
+%    \end{macrocode}
+% The submacro iterates through the shape and adds the rules to box |\z@|.
+% |\@tempcntb| is a size counter.
+%    \begin{macrocode}
+  \setbox\z@\box\voidb@x \@tempcntb\z@
+  \expandafter\lst@FrameH@\expandafter#3#4\relax\relax\relax
+%    \end{macrocode}
+% If there is no outer frame (except the inner one), the |\lst@rulesepcolor|
+%  value ensures that the next conditional yields false and thus the frame
+%  gets a background if |\lst@fillcolor| isn't empty.
+% Otherwise we draw the background for the outer frame.
+%    \begin{macrocode}
+  \ifvoid\z@
+    \global\setbox#1\box\voidb@x
+  \else
+    \setbox\z@=\hbox{%
+      \ifx\lst@frameouter\relax \let\lst@rulesepcolor\relax
+      \else
+        \expandafter\lst@FrameHBkg\lst@frameouter #3\lst@rulesepcolor
+      \fi
+%    \end{macrocode}
+% Now we might overlay this with the background for the inner frame.
+% Then we can put the frame rules in front of all.
+%    \begin{macrocode}
+      \ifx\lst@fillcolor\lst@rulesepcolor\else
+        \expandafter\lst@FrameHBkg\lst@frameinner #3\lst@fillcolor
+      \fi
+      \rlap{\box\z@}}%
+%    \end{macrocode}
+% Finally we put the extra margin below or above the rules and background.
+%    \begin{macrocode}
+    \global\setbox#1=\vbox{%
+      \ht\lst@framebox#2\relax \offinterlineskip
+      \if #3T\box\z@ \copy\lst@framebox
+        \else\copy\lst@framebox \box\z@ \fi}%
+  \fi}
+%    \end{macrocode}
+% If we haven't reached the end of the inner loop, we add one rule to box |\z@|.
+%    \begin{macrocode}
+\gdef\lst@FrameH@#1#2#3#4{%
+  \ifx\relax#4\@empty\else
+    \lst@FrameAddHRule \@tempcntb#1#2#3#4%
+%    \end{macrocode}
+% Then we update |\lst@frameinner| and |\lst@frameouter|.
+% These macros will contain the first five parameters to |\lst@FrameHBkg|.
+%    \begin{macrocode}
+    \edef\lst@temp{#2{\lst@framediml}#4{\lst@framedimr}%
+                   {\the\dimexpr\ht\z@+\dp\z@}}%
+    \ifx\lst@frameinner\relax \let\lst@frameinner\lst@temp
+                        \else \let\lst@frameouter\lst@temp \fi
+%    \end{macrocode}
+% Continue the loop.
+%    \begin{macrocode}
+    \advance\@tempcntb\@ne
+    \expandafter\lst@FrameH@\expandafter#1%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameHBkg}
+% \meta{left \alternative{Y,N,R}}\marg{left width}\meta{right \alternative{Y,N,R}}\marg{right width}\marg{height}\meta{\alternative{t,b}}\meta{color macro}
+%
+% If the color is not empty, set a temporary box, we move to the right
+%  horizontal position inside, \ldots
+%    \begin{macrocode}
+\gdef\lst@FrameHBkg#1#2#3#4#5#6#7{%
+  \ifx #7\@empty\else
+    \setbox\@tempboxa\hbox{%
+      \@tempdima\z@
+      \color@begingroup #7%
+      \kern-\lst@framexleftmargin
+%    \end{macrocode}
+% use a round background or advance the additional width of the background
+%  rule, \ldots
+%    \begin{macrocode}
+      \if #1N\else \ifdim#2>\z@
+        \if #1R\llap{\lst@FrameCornerRoundBkg{#2}#6l#7}%
+          \else\advance\@tempdima#2\kern-#2\fi
+      \fi \fi
+%    \end{macrocode}
+% advance it (more) if there is no round right corner, \ldots
+%    \begin{macrocode}
+      \ifdim#4>\z@ \if#3Y\advance\@tempdima#4\fi \fi
+%    \end{macrocode}
+% typeset the background rule, and \ldots
+%    \begin{macrocode}
+      \vrule \@height\dimexpr#5\relax\@depth\z@ \@width\dimexpr \@tempdima+%
+          \lst@framexleftmargin+\lst@linewidth+\lst@framexrightmargin\relax
+%    \end{macrocode}
+% add a round corner at the right if necessary.
+%    \begin{macrocode}
+      \ifdim#4>\z@ \if#3R%
+        \rlap{\lst@FrameCornerRoundBkg{#4}#6r#7}%
+      \fi \fi
+      \color@endgroup}%
+%    \end{macrocode}
+% This box is |\rlap|ped and raised or lowered to keep top frames above and
+%  bottom frames below the baseline.
+%    \begin{macrocode}
+    \if #6t\rlap{\raise\dp\@tempboxa\box\@tempboxa}%
+      \else\rlap{\lower\ht\@tempboxa\box\@tempboxa}\fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameCalcLRWidth}
+% \meta{size \textup(zero based\textup)}
+% determines the width of left plus right corners of the given size and puts it
+%  into |\@tempdima|.
+%    \begin{macrocode}
+\gdef\lst@FrameCalcLRWidth#1{%
+  \@tempdima \dimexpr ((\lst@rulesep+\lst@framerulewidth)*#1%
+                       +\lst@frametextsep+\lst@framerulewidth)*2\relax}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameAddHRuleRule}
+% \meta{size \textup(zero based\textup)}\meta{\alternative{t,b}}\meta{left corner \alternative{Y,N,R}}\meta{mid-rule \alternative{Y,N}}\meta{right corner \alternative{Y,N,R}}
+% adds a top or bottom frame rule of the given size and shape to box 0.
+% Top rules are above and bottom rules are below the baseline.
+%
+% We calculate the left-plus-right-width and get the position in the circle font
+%  if necessary.
+%    \begin{macrocode}
+\gdef\lst@FrameAddHRule#1#2#3#4#5{%
+  \lst@FrameCalcLRWidth#1%
+  \lst@ifframeround \ifx\lst@FrameSetParams\lst@ltxFrameSetParams
+    \@getcirc\@tempdima
+  \fi \fi
+  \divide\@tempdima\tw@ \edef\lst@framecornerwd{\the\@tempdima}%
+%    \end{macrocode}
+% We use any previous frame rules in box 0 and start to construct the new one:
+% move to the correct horizontal position, select rule color, \ldots
+%    \begin{macrocode}
+  \setbox\z@\hbox{%
+    \box\z@
+    \setbox\z@\hbox{%
+      \kern-\lst@framexleftmargin
+      \color@begingroup
+      \ifnum#1>\z@ \let\lst@rulecolor\lst@xrulecolor \fi
+      \lst@rulecolor
+%    \end{macrocode}
+% set the left corner (i.e.~using |\lst@FrameCorner| with |\llap|, |TL| or |BL|,
+%  the corner type \alternative{Y,N,R}, the size |#1|, and the current width of
+%  the left side, which gets updated if necessary), \ldots
+%    \begin{macrocode}
+      \lst@FrameCorner\llap{#2l}#3#1\lst@framediml
+%    \end{macrocode}
+% draw the horizontal line (or insert |\@tempdima| space if `invisible'), \ldots
+%    \begin{macrocode}
+      \@tempdima\dimexpr \lst@framexleftmargin+\lst@linewidth
+                        +\lst@framexrightmargin\relax
+      \if #4Y\vrule \if#2t \@height\z@ \@depth\lst@framerulewidth
+                      \else\@height\lst@framerulewidth \@depth\z@ \fi
+                    \@width\@tempdima
+        \else\kern\@tempdima
+      \fi
+%    \end{macrocode}
+% and set the left corner (|\rlap|, |TR| or |BR|, corner type, size, and width).
+%    \begin{macrocode}
+      \lst@FrameCorner\rlap{#2r}#5#1\lst@framedimr
+      \color@endgroup}%
+%    \end{macrocode}
+% Note that top rules are constructed below the baseline and bottom rules atop.
+% Now we raise or lower the box.
+%    \begin{macrocode}
+    \if#2t\rlap{\raise\dp\z@\box\z@}%
+     \else\rlap{\lower\ht\z@\box\z@}\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameCorner}
+% \meta{\alternative{\textbackslash llap,\textbackslash rlap}}\marg{position \alternative{tl,tr,bl,br}}\meta{type \alternative{Y,N,R}}\meta{size}\meta{width macro}
+%
+% The corner is put in its own box first.
+% For round corners we use the width and the position as arguments to
+%  |\lst@FrameCornerRound|.
+%    \begin{macrocode}
+\gdef\lst@FrameCorner#1#2#3#4#5{%
+  \setbox\@tempboxa\hbox{%
+    \if #3R\lst@FrameCornerRound\lst@framecornerwd #2%
+      \else\csname\@lst frame#2\endcsname\fi}%
+%    \end{macrocode}
+% If the corner is not to be typeset at all, we must keep its height and depth
+%  for correct alignment.
+% Otherwise we update the width of the left or right side and typeset the box.
+%    \begin{macrocode}
+  \if #3N%
+    \vphantom{\box\@tempboxa}%
+  \else
+    \ifdim #5<\wd\@tempboxa \xdef#5{\the\wd\@tempboxa}\fi
+    #1{\box\@tempboxa}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@frametr}
+% \begin{macro}{\lst@framebr}
+% \begin{macro}{\lst@framebl}
+% \begin{macro}{\lst@frametl}
+% These macros make a vertical and horizontal rule.
+% |\lst@framecornerwd| contains the size of one corner and is kindly provided by
+%  |\lst@FrameAddHRule|.
+%    \begin{macrocode}
+\gdef\lst@frametr{%
+  \vrule \@width\lst@framecornerwd \@height\lst@framerulewidth \@depth\z@
+  \kern-\lst@framerulewidth
+  \vrule \@width\lst@framerulewidth \@height\lst@framerulewidth
+         \@depth\dimexpr\lst@framecornerwd-\lst@framerulewidth\relax}
+\gdef\lst@framebr{%
+  \vrule \@width\lst@framecornerwd \@height\lst@framerulewidth \@depth\z@
+  \kern-\lst@framerulewidth
+  \vrule \@width\lst@framerulewidth \@height\lst@framecornerwd \@depth\z@}
+\gdef\lst@framebl{%
+  \vrule \@width\lst@framerulewidth \@height\lst@framecornerwd \@depth\z@
+  \kern-\lst@framerulewidth
+  \vrule \@width\lst@framecornerwd \@height\lst@framerulewidth \@depth\z@}
+\gdef\lst@frametl{%
+  \vrule \@width\lst@framerulewidth \@height\lst@framerulewidth
+         \@depth\dimexpr\lst@framecornerwd-\lst@framerulewidth\relax
+  \kern-\lst@framerulewidth
+  \vrule \@width\lst@framecornerwd \@height\lst@framerulewidth \@depth\z@}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\lst@ltxFrameSetParams}
+% We adjust values to round corners if necessary.
+% \texttt{textsep} and \texttt{rulewidth} are calculated from the adjusted
+%  left-plus-right-width of the most inner frame |\z@|.
+% For \texttt{rulesep} we need to use |\@ne|.
+%    \begin{macrocode}
+\gdef\lst@ltxFrameSetParams{%
+  \lst@ifframeround
+    \lst@FrameCalcLRWidth\z@ \@getcirc\@tempdima
+    \edef\lst@frametextsep{\the\dimexpr\@tempdima/2-\@wholewidth}%
+    \edef\lst@framerulewidth{\the\@wholewidth}%
+%    \end{macrocode}
+%    \begin{macrocode}
+    \lst@FrameCalcLRWidth\@ne \@getcirc\@tempdima
+    \edef\lst@rulesep{\the\dimexpr\@tempdima/2-\@wholewidth*2
+                                  -\lst@frametextsep}%
+%    \end{macrocode}
+% We (re-)set the error message.
+%    \begin{macrocode}
+    \global\let\lst@FrameCornerError\lst@ltxFrameCornerError
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@ltxFrameCornerRoundBkg}
+% \marg{width}\meta{\alternative{t,b}}\meta{\alternative{l,r}}\meta{color macro}
+%
+% When drawing round corners with background color we inform the user if the
+%  filled circles in the font are not big enough.
+% But we do this only once a listing.
+%    \begin{macrocode}
+\gdef\lst@ltxFrameCornerRoundBkg#1#2#3#4{%
+  \@getcirc{\dimexpr#1*2}\advance\@tempcnta 115\relax
+  \ifnum 126<\@tempcnta
+    \lst@FrameCornerError \global\let\lst@FrameCornerError\@empty
+  \else
+%    \end{macrocode}
+% The characters don't need to be raised at the top.
+%    \begin{macrocode}
+    \@tempdimb\if #2t\z@ \else\@tempdima \fi
+    \raise.5\@tempdimb\hbox{\@circlefnt\char\@tempcnta}%
+    \kern-\@tempdima
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@ltxFrameCornerError}
+% This is the actual error message.
+%    \begin{macrocode}
+\gdef\lst@ltxFrameCornerError{%
+  \lst@Error{Corner background exceeds LaTeX's circle font}\@ehc}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@ltxFrameCornerRound}
+% \marg{width}\meta{\alternative{t,b}}\meta{\alternative{l,r}}
+%
+% For round corners we use the circle font positions |\@tempcnta|\(+0\) (\texttt{TR}),
+%  \(+1\) (\texttt{BR}),  \(+2\) (\texttt{BL}), and  \(+3\) (\texttt{TL}).
+% Only right corners needs to be shifted horizontally.
+%    \begin{macrocode}
+\gdef\lst@ltxFrameCornerRound#1#2#3{%
+  \hb@xt@#1{%
+    \if #3r%
+      \kern#1\kern-\lst@framerulewidth
+      \if #2b\advance\@tempcnta\@ne \fi
+    \else
+      \advance\@tempcnta\if #2b\tw@\else\thr@@\fi
+    \fi
+%    \end{macrocode}
+% Now we put the circle font character into a box, adjust the height or depth,
+%  and output the arc.
+% For top rules the arc is moved below the baseline.
+%    \begin{macrocode}
+    \setbox\@tempboxa\hbox{\@circlefnt\char\@tempcnta}%
+    \if #2b\dp\@tempboxa\z@ \box\@tempboxa
+      \else\ht\@tempboxa\lst@framerulewidth \lower\ht\@tempboxa\box\@tempboxa
+    \fi
+    \hss}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameUseDrawPackage}
+% This macro is used to change the definitions for round corners---that's why
+%  we've made their definitions with \texttt{ltx} prefix.
+% If not present, we try to load the support for |#1|.
+% Afterwards we either change three definitions or give an error message.
+%    \begin{macrocode}
+\gdef\lst@FrameUseDrawPackage#1{%
+  \ifcsname\@lst#1FrameCornerRound\endcsname\else
+    \lst@RequireAspects{[#1]frames}%
+  \fi
+  \ifcsname\@lst#1FrameCornerRound\endcsname
+    \global\expandafter\let\expandafter\lst@FrameSetParams
+                              \csname\@lst#1FrameSetParams\endcsname
+    \global\expandafter\let\expandafter\lst@FrameCornerRound
+                              \csname\@lst#1FrameCornerRound\endcsname
+    \global\expandafter\let\expandafter\lst@FrameCornerRoundBkg
+                              \csname\@lst#1FrameCornerRoundBkg\endcsname
+  \else
+    \lst@Error{Support for `#1' not available}\@ehc
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameSetParams}
+% \begin{macro}{\lst@FrameCornerRoundBkg}
+% \begin{macro}{\lst@FrameCornerRound}
+% Now we select the standard `draw package'.
+% Currently it is used for round corners only.
+%    \begin{macrocode}
+\lst@FrameUseDrawPackage{ltx}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\lst@FrameDrawPackageFallback}
+% If a required package is not available, we call this macro.
+% We give an error message and use the \texttt{ltx} macros.
+%    \begin{macrocode}
+\gdef\lst@FrameDrawPackageFallback#1{%
+  \lst@Error{#1 package required for `frameround=[#1]true'}\@ehc
+  \lst@FrameUseDrawPackage{ltx}%
+  \lst@ltxFrameSetParams}
+%    \end{macrocode}
+% \end{macro}
+%
+% If the default of |\lst@FrameSetParams| is still in use at the beginning of
+%  the document (i.e.~the user made no changes), we replace it if a supported
+%  package is present.
+% We check for \packagename{pict2e}, \packagename{PSTricks}, and
+%  \packagename{pgf} in that order.
+%    \begin{macrocode}
+\ifx \@nodocument\relax \expandafter\@firstofone
+                  \else \expandafter\AtBeginDocument \fi
+{%
+  \ifx\lst@FrameSetParams\lst@ltxFrameSetParams
+    \@ifundefined{pIIe@mode}%
+        {\@ifundefined{psarc}{\@ifundefined{pgfget}{}%
+                              {\lst@FrameUseDrawPackage{pgf}}}%
+         {\lst@FrameUseDrawPackage{pst}}}%
+    {\lst@FrameUseDrawPackage{pict2e}}%
+  \fi}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+% \begin{aspect}{[pict2e]frames}
+% Round corners with the \packagename{pict2e} package.
+%    \begin{macrocode}
+\lst@BeginAspect{[pict2e]frames}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@pict2eFrameSetParams}
+% If a special control sequence of the \packagename{pict2e} package (|\pIIe@mode|) is
+%  not defined, we call the fallback definition.
+% Note that we make this test once after \packagename{pict2e} selection since
+%  we empty |\lst@FrameSetParams|.
+%    \begin{macrocode}
+\global\@namedef{lst@pict2eFrameSetParams}{%
+  \global\let\lst@FrameSetParams\@empty
+  \@ifundefined{pIIe@mode}{\lst@FrameDrawPackageFallback{pict2e}}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@pict2eFrameCornerRound}
+% \marg{width}\meta{\alternative{t,b}}\meta{\alternative{l,r}}
+%
+% We assign the rule width and calculate the required unitlength.
+%    \begin{macrocode}
+\global\@namedef{lst@pict2eFrameCornerRound}#1#2#3{%
+  \linethickness\lst@framerulewidth\relax \unitlength#1\relax
+  \unitlength\tw@\unitlength \advance\unitlength-\@wholewidth
+%    \end{macrocode}
+% |\lower|, |\raise|, and |\kern| move the quarter circle to its correct
+%  position.
+% (Note again that top rules are constructed below the baseline.)
+%    \begin{macrocode}
+  \setbox\@tempboxa\hbox{%
+    \if #2t\lower \else \raise \fi
+    #1\hbox{\if #3l\kern#1\fi\oval[1](1,1)[#2#3]}}%
+%    \end{macrocode}
+% Finally we set the box width to the specified dimension |#1| and the height
+%  and depth such that the arc aligns with the horizontal rule.
+%    \begin{macrocode}
+  \wd\@tempboxa#1\relax
+  \if #2t\dp\@tempboxa#1\ht\@tempboxa\z@
+    \else\ht\@tempboxa#1\dp\@tempboxa\z@ \fi
+  \box\@tempboxa}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@pict2eFrameCornerRoundBkg}
+% uses the same |\oval| command but with different line width and unit length.
+% And, of course, it is raised for bottom rules since they are build above the
+%  baseline.
+%    \begin{macrocode}
+\global\@namedef{lst@pict2eFrameCornerRoundBkg}#1#2#3#4{%
+  \unitlength#1\relax \linethickness\unitlength
+  \if #2b\raise#1\fi \hb@xt@\z@{\oval[1](1,1)[#2#3]}}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+% \begin{aspect}{[pst]frames}
+% Round corners with \packagename{PSTricks}.
+%    \begin{macrocode}
+\lst@BeginAspect{[pst]frames}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@pstFrameSetParams}
+% We check whether the \packagename{PSTricks} package is available.
+%    \begin{macrocode}
+\gdef\lst@pstFrameSetParams{%
+  \global\let\lst@FrameSetParams\@empty
+  \@ifundefined{psarc}{\lst@FrameDrawPackageFallback{pstricks}}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@pstFrameCornerRound}
+% \marg{width}\meta{\alternative{t,b}}\meta{\alternative{l,r}}
+%
+% Since \packagename{listings} requires |\color|\marg{color} for color
+%  selection, but \packagename{PSTricks} doesn't (it uses the color name
+%  directly), we need to get rid of |\color| somehow.
+%    \begin{macrocode}
+\gdef\lst@pstFrameCornerRound#1#2#3{%
+  \let\color\@firstofone
+%    \end{macrocode}
+% Next we need an appropriate |\pslinecolor|---the color is black if no rule
+%  color has been specified.
+%    \begin{macrocode}
+  \ifx\lst@rulecolor\@empty \def\pslinecolor{black}%
+                      \else \let\pslinecolor\lst@rulecolor \fi
+%    \end{macrocode}
+% We assign the rule width and calculate the circle radius |\@tempdima| (the
+%  middle of the line is at the radius, so we move it half its width inside).
+%    \begin{macrocode}
+  \pslinewidth\lst@framerulewidth\relax
+  \@tempdima-\lst@framerulewidth \divide\@tempdima\tw@
+  \advance\@tempdima #1\relax
+%    \end{macrocode}
+% Now we can select the arc with correct origin, radius, and angles.
+%    \begin{macrocode}
+  \setbox\@tempboxa\hbox{%
+    \if #2t\if#3r\psarc (0,-#1){\@tempdima}{0}{90}%
+            \else\psarc(#1,-#1){\@tempdima}{90}{180}\fi
+     \else \if#3r\psarc (0,#1){\@tempdima}{270}{360}%
+            \else\psarc(#1,#1){\@tempdima}{180}{270}\fi
+    \fi}%
+%    \end{macrocode}
+% Finally we set the width to the specified dimension |#1| and the height and
+%  depth such that the arc aligns with the horizontal rule.
+%    \begin{macrocode}
+  \wd\@tempboxa#1\relax
+  \if #2t\dp\@tempboxa#1\ht\@tempboxa\z@
+    \else\ht\@tempboxa#1\dp\@tempboxa\z@ \fi
+  \box\@tempboxa}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@pstFrameCornerRoundBkg}
+% The background is easier since we don't need to preserve width, height, and
+%  depth---we've already collected that data.
+% So we just deactivate |\color| and \ldots
+%    \begin{macrocode}
+\gdef\lst@pstFrameCornerRoundBkg#1#2#3#4{%
+  \let\color\@firstofone \let\pslinecolor#4%
+%    \end{macrocode}
+% choose the origin and angle data for |\pswedge*|.
+% |(0,0)| is not needed, but makes the code (hopefully) more readable.
+%    \begin{macrocode}
+  \if #2t\if #3r\pswedge*(0,0){#1}{0}{90}%
+           \else\pswedge*(0,0){#1}{90}{180}\fi
+    \else\if #3r\pswedge*(0,#1){#1}{270}{360}%
+           \else\pswedge*(0,#1){#1}{180}{270}\fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+% \begin{aspect}{[pgf]frames}
+% Round corners with the \packagename{pgf} package.
+%    \begin{macrocode}
+\lst@BeginAspect{[pgf]frames}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@pgfFrameSetParams}
+% checks whether \packagename{pgf} is available.
+%    \begin{macrocode}
+\gdef\lst@pgfFrameSetParams{%
+  \global\let\lst@FrameSetParams\@empty
+  \@ifundefined{pgfget}{\lst@FrameDrawPackageFallback{pgf}}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@pgfFrameCornerRound}
+% \marg{width}\meta{\alternative{t,b}}\meta{\alternative{l,r}}
+%
+% We assign and low-level set the rule width and \ldots
+%    \begin{macrocode}
+\gdef\lst@pgfFrameCornerRound#1#2#3{%
+  \pgf@linewidth\lst@framerulewidth\relax
+  \pgfsys@setlinewidth{\pgfget{linewidth}}%
+%    \end{macrocode}
+% calculate the circle radius the same way as for \packagename{PSTricks}.
+%    \begin{macrocode}
+  \@tempdima-\lst@framerulewidth \divide\@tempdima\tw@
+  \advance\@tempdima #1\relax
+%    \end{macrocode}
+% We set \packagename{pgf}'s registers and draw the quarter.
+%    \begin{macrocode}
+  \pgf@x\@tempdima \pgf@y=0.555\pgf@x
+  \setbox\@tempboxa\hbox{\lst@pgfFrameQuarter\pgfsys@moveto #2#3%
+                         \pgfstroke}%
+%    \end{macrocode}
+% It is moved to the desired location via |\lower|, |\raise|, and |\kern|, see
+%  the \packagename{pict2e} support.
+%    \begin{macrocode}
+  \setbox\@tempboxa\hbox{%
+    \if #2t\lower \else \raise \fi
+    #1\hbox{\if #3l\kern#1\fi\box\@tempboxa}}%
+%    \end{macrocode}
+% Finally we set width, height, and depth and output the box.
+%    \begin{macrocode}
+  \wd\@tempboxa#1\relax
+  \if #2t\dp\@tempboxa#1\ht\@tempboxa\z@
+    \else\ht\@tempboxa#1\dp\@tempboxa\z@ \fi
+  \box\@tempboxa}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@pgfFrameCornerRoundBkg}
+% We set \packagename{pgf}'s registers, raise bottom boxes, and fill the
+%  quarter circle.
+%    \begin{macrocode}
+\gdef\lst@pgfFrameCornerRoundBkg#1#2#3#4{%
+  \pgf@x#1\relax \pgf@y=0.555\pgf@x
+  \if #2b\raise#1\fi
+  \hb@xt@\z@{\pgfsys@moveto{0}{0}%
+             \lst@pgfFrameQuarter\pgfsys@lineto #2#3%
+             \pgfsys@lineto{0}{0}%
+             \pgffill}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@pgfFrameQuarter}
+% Here we define the paths for the quarter circles.
+% We |\pgfsys@moveto| or |\pgfsys@lineto| the first coordinates and use
+%  |\pgfsys@bezier| with control and end points.
+%    \begin{macrocode}
+\gdef\lst@pgfFrameQuarter#1#2#3{%
+  \if #2t%
+    \if #3r#1{0}{\pgfget x}\pgfsys@bezier
+             {\pgfget y}{\pgfget x}{\pgfget x}{\pgfget y}{\pgfget x}{0}%
+      \else#1{-\pgfget x}{0}\pgfsys@bezier
+             {-\pgfget x}{\pgfget y}{-\pgfget y}{\pgfget x}{0}{\pgfget x}%
+    \fi
+  \else
+    \if #3r#1{\pgfget x}{0}\pgfsys@bezier
+             {\pgfget x}{-\pgfget y}{\pgfget y}{-\pgfget x}{0}{-\pgfget x}%
+      \else#1{0}{-\pgfget x}\pgfsys@bezier
+             {-\pgfget y}{-\pgfget x}{-\pgfget x}{-\pgfget y}{-\pgfget x}{0}%
+    \fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Macro use for make}
+%
+% \begin{aspect}{make}
+% Mark usage of macros by extending the style to surrounding |$(| and |)|.
+%    \begin{macrocode}
+\lst@BeginAspect[keywords]{make,makemacrouse}
+%    \end{macrocode}
+%
+% \begin{lstkey}{makemacrouse}
+% If not active, the delimiters are just usual delimiters.
+%    \begin{macrocode}
+\lst@Key{makemacrouse}f[t]{\lstKV@SetIf{#1}\lst@ifmakemacrouse}
+\lst@AddToHook{Init}{%
+  \lst@ifmakemacrouse\else
+    \let\lst@BeginMacroUse\lst@BeginDelim
+    \let\lst@EndMacroUse\lst@EndDelim
+  \fi}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@makemode}
+% \begin{macro}{\lst@Delim@macrouse}
+% The mode does not change (one stars) any setting other than the mode number.
+% To define the actual delimiters, we use |\lst@Delim@s| and replace the given
+% parameters |#3#4#5| by our begin and end macros and an empty style.
+%    \begin{macrocode}
+\lst@NewMode*[]\lst@makemode
+\gdef\lst@Delim@macrouse#1#2\@empty#3#4#5{%
+  \lst@DelimDM@s \lst@makemode{#1}{#2}\@empty
+                 \lst@BeginMacroUse\lst@EndMacroUse{}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\lst@BeginMacroUse}
+% \begin{macro}{\lst@EndMacroUse}
+% We replace the scan class by our own one.
+%    \begin{macrocode}
+\gdef\lst@BeginMacroUse{%
+  \lst@AddTokenToStream
+  \lst@DelimOpen\iftrue{\def\lst@scanclass{macrouseopen}}}
+%    \end{macrocode}
+% There are various possibilities to do this for the closing delimiter.
+% We will use |\lst@DelimClose| \ldots
+%    \begin{macrocode}
+\gdef\lst@EndMacroUse{%
+  \lst@AddTokenToStream
+  \lst@DelimClose{\iftrue\lst@EndMacroUse@}}
+%    \end{macrocode}
+% and grab all material in front of |\lst@AddTokenToStream|.
+% The commands are executed, the scan class gets adjusted, and finally we add
+%  the token to the stream.
+% This way, future improvements to |\lst@DelimClose| (hopefully) apply to this
+%  definition.
+%    \begin{macrocode}
+\gdef\lst@EndMacroUse@#1\lst@AddTokenToStream{%
+  #1\def\lst@scanclass{macrouseclose}%
+  \lst@AddTokenToStream}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\lst@Process@macrouseopen}
+% \begin{macro}{\lst@Process@macrouseclose}
+% Finally we need to define the |\lst@Process@|\ldots\ macros.
+% The opening gets the style from the next token, pushes it onto the stack, and
+%  uses it as its own style.
+%    \begin{macrocode}
+\gdef\lst@Process@macrouseopen#1#2#3{%
+  \lst@ProcessGetNextExtra\lst@macrousestyle
+  {\lst@ProcessPushStyle{}{}\lst@macrousestyle
+   \lst@ProcessExtraStyle\lst@scandelim\lst@macrousestyle{#1}{#2}{#3}}}
+%    \end{macrocode}
+% At the end we only need to pop the style and use it.
+%    \begin{macrocode}
+\gdef\lst@Process@macrouseclose{%
+  \lst@ProcessPopStyle\@empty\@empty\@empty
+  \lst@ProcessExtraStyle\lst@scan@delim\lst@macrousestyle}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Writing to an external file}
+%
+% \begin{aspect}{writefile}
+% We extract the characters from the token stream and write it to file.
+% This seems to be obvious, but versions prior to \packagename{listings} 2
+%  didn't kept the data in a token stream.
+%    \begin{macrocode}
+\lst@BeginAspect{writefile,writefile}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@WF}
+% The file we will write to.
+%    \begin{macrocode}
+\newwrite\lst@WF
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{writefile}
+% The key saves the filename and \ldots
+%    \begin{macrocode}
+\lst@Key{writefile}{}{\def\lst@writefile{#1}}
+%    \end{macrocode}
+% if not empty, we open the file, advise the package to process the listing, and
+%  use a special definition to write the data to the file.
+%    \begin{macrocode}
+\lst@AddToHook{InitDisplay}
+  {\ifx\lst@writefile\@empty\else
+     \immediate\openout\lst@WF=\lst@writefile\relax
+     \let\lst@ifprocessdisplay\iftrue \@gobbletwo\fi\fi
+     \let\lst@WFOutputTokenStream\lst@WFWriteToFile
+   \fi}
+%    \end{macrocode}
+% That macro is inserted and initialized here:
+%    \begin{macrocode}
+\lst@AddToAtTop\lst@OutputTokenStream\lst@WFOutputTokenStream
+\global\let\lst@WFOutputTokenStream\@empty
+%    \end{macrocode}
+% At the end of the listing we close the file.
+%    \begin{macrocode}
+\lst@AddToHook{ExitDisplay}
+  {\ifx\lst@writefile\@empty\else \immediate\closeout\lst@WF \fi}
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@WFWriteToFile}
+% We add the current token to the stream, extract the characters, and write them
+%  to the file (if it's not an empty line at the end of a listing).
+%    \begin{macrocode}
+\gdef\lst@WFWriteToFile{%
+  \lst@AddTokenToStream
+  \edef\lst@arg{\expandafter\lst@WFExtractChars\lst@tokenstream
+                                               \@nnil\@empty\@empty\@empty}%
+  \lst@ifeolisting%
+    \ifx\lst@arg\@empty\else%
+      \immediate\write\lst@WF{\lst@arg}%
+    \fi%
+  \else%
+    \immediate\write\lst@WF{\lst@arg}%
+  \fi}
+%    \end{macrocode}
+% The characters are in the first argument to the |\lst@Process@|\ldots\ macros:
+% While not reaching the terminator |\@nnil| from above, we leave |#2| behind
+%  and continue.
+%    \begin{macrocode}
+\gdef\lst@WFExtractChars#1#2#3#4{%
+  \ifx #1\@nnil\else #2\expandafter\lst@WFExtractChars \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+% \begin{aspect}{writemacro}
+% This aspect `writes' the content into a macro.
+%    \begin{macrocode}
+\lst@BeginAspect{writemacro,writemacro}
+%    \end{macrocode}
+%
+% \begin{lstkey}{writemacro}
+% The key saves the macro name and \ldots
+%    \begin{macrocode}
+\lst@Key{writemacro}{}{\def\lst@writemacro{#1}}
+%    \end{macrocode}
+% if not empty, we advise the package to process the listing, and use a special
+%  definition to write the data into the macro.
+%    \begin{macrocode}
+\lst@AddToHook{InitDisplay}
+  {\ifx\lst@writemacro\@empty\else
+     \let\lst@ifprocessdisplay\iftrue \@gobbletwo\fi\fi
+     \let\lst@WMOutputTokenStream\lst@WMWriteToMacro
+%    \end{macrocode}
+% We rebuild the macro name to protect ourselves against a missing escapechar or
+%  wrong catcodes while reading the key\(=\)value list.
+% This also extends the functionality since it allows
+%  |\listing\number\the|\meta{counter} as macro name---this isn't documented
+%  elsewhere.
+% If the macro haven't existed before, we |\let| it globally empty.
+%    \begin{macrocode}
+     \edef\lst@writemacro{\expandafter\string\lst@writemacro}%
+     \edef\lst@writemacro{\expandafter\noexpand
+         \csname\expandafter\@gobble\lst@writemacro\endcsname}%
+     \expandafter\lst@ProvideDef\lst@writemacro\global\@empty
+   \fi}
+%    \end{macrocode}
+% The same as for \aspectname{writefile}:
+%    \begin{macrocode}
+\lst@AddToAtTop\lst@OutputTokenStream\lst@WMOutputTokenStream
+\global\let\lst@WMOutputTokenStream\@empty
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@WMWriteToMacro}
+% We add the current token to the stream, extract the characters, and add them
+%  to the macro.
+%    \begin{macrocode}
+\begingroup\catcode`\^^M=12\relax%
+\gdef\lst@WMWriteToMacro{%
+  \lst@AddTokenToStream%
+  \edef\lst@arg{\expandafter\lst@WFExtractChars\lst@tokenstream%
+                                               \@nnil\@empty\@empty\@empty}%
+  \lst@ifeolisting%
+    \ifx\lst@arg\@empty\else%
+      \expandafter\lst@eAddTo\lst@writemacro{\lst@arg^^M}%
+    \fi%
+  \else%
+    \expandafter\lst@eAddTo\lst@writemacro{\lst@arg^^M}%
+  \fi}%
+\endgroup
+%    \end{macrocode}
+% The following definition is exactly the same as for \aspectname{writefile}.
+%    \begin{macrocode}
+\gdef\lst@WFExtractChars#1#2#3#4{%
+  \ifx #1\@nnil\else #2\expandafter\lst@WFExtractChars \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Escaping to \LaTeX}
+%
+% \begin{aspect}{escape}
+% We now define the \ldots\ damned \ldots\ the aspect has escaped!
+%    \begin{macrocode}
+\lst@BeginAspect{escape,%
+        escapechar,escapeinside,mathescape}
+%    \end{macrocode}
+%
+% \begin{lstkey}{escapechar}
+% \begin{lstkey}{escapeinside}
+% The first key just checks for the optional argument and calls
+%  \keyname{escapeinside} with doubled escape character.
+%    \begin{macrocode}
+\lst@Key{escapechar}\relax{\lstKV@OArg[]{#1}{%
+  \KV@lst@escapeinside{[##1]{##2}{##2}}}}
+%    \end{macrocode}
+% Here we first delete an old escape, parse optional and mandatory arguments,
+%  \ldots
+%    \begin{macrocode}
+\lst@Key{escapeinside}\relax{\lstKV@OArg[]{#1}{%
+  \lst@RedefDeleteClass{Escape}%
+  \lstKV@ReadArgs:{\lst@classes\lst@option}{##1}%
+  \lstKV@ReadArgs{}{\lst@delim\lst@type}{##2}%
+  \ifx\lst@delim\@empty\else
+%    \end{macrocode}
+% and convert the delimters if (the first is) not empty.
+%    \begin{macrocode}
+    \let\lst@arg\@empty \expandafter\lst@RedefConvert\lst@delim\@nnil
+    \let\lst@delim\lst@arg
+    \let\lst@arg\@empty \expandafter\lst@RedefConvert\lst@type\@nnil
+%    \end{macrocode}
+% Now we build the three arguments
+% |\lst@Escape|\marg{open}|{\lst@Escape|\marg{open} \marg{close}\marg{escape
+%  begin}\marg{escape end}|}| \ldots
+%    \begin{macrocode}
+    \edef\lst@delim{\noexpand\lst@Escape{\lst@delim}%
+                    {\noexpand\lst@Escape{\lst@delim}{\lst@arg}}}%
+    \lst@elAddTo\lst@delim{\expandafter{\lst@classes}}%
+    \lst@elAddTo\lst@delim{\expandafter{\lst@option}}%
+%    \end{macrocode}
+% used to insert the escape.
+%    \begin{macrocode}
+    \expandafter\lst@RedefInsert\lst@delim
+  \fi}}
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{lstkey}{mathescape}
+% We check whether the internal switch has changed.
+% If this is the case we either need to insert or delete the math escape.
+% The redefinition with |\lst@Escape| uses math shifts as extra begin/end
+%  arguments.
+%    \begin{macrocode}
+\begingroup \lccode`\/=`\$\lowercase{\endgroup
+\lst@Key{mathescape}\relax[t]{%
+  \let\lst@if\lst@ifmathescape \lstKV@SetIf{#1}\lst@ifmathescape
+  \ifx\lst@if\lst@ifmathescape\else
+    \lst@ifmathescape
+      \lst@RedefInsert\lst@MathEscape{/}{\lst@Escape{/}{/}{$}{$}}%
+    \else
+      \lst@RedefDelete\lst@MathEscape{/}%
+    \fi
+  \fi}%
+}
+%    \end{macrocode}
+%    \begin{macrocode}
+\global\let\lst@ifmathescape\iffalse
+%    \end{macrocode}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@escapemode}
+% Since the mode uses the kernel escape feature as parent, it is sufficient to
+%  enter that mode and an escape starts.
+%    \begin{macrocode}
+\lst@NewMode[escape]\lst@escapemode
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@Escape}
+% \marg{opening delim}\marg{closing delim}\marg{escape begin}\marg{escape end}|}|
+%
+% If there are no extra begin/end escape commands, the opening delimiter only
+%  needs to enter |\lst@escapemode| and check whether the escape ends at EOL.
+%    \begin{macrocode}
+\gdef\lst@Escape#1#2#3#4{%
+  \ifx\@empty#3#4\@empty
+    \lst@CArg #1\relax\lst@CDef{}%
+        {\lst@BeginDelimInvisible\lst@escapemode{\ifx\^^M#2\lst@Lmodetrue\fi}}%
+        \@empty
+%    \end{macrocode}
+% Otherwise we extend the definitions of |\lst@escapebegin| and |\lst@escapeend|
+%  inside |\lst@extra| (and they get defined there if they are not present).
+% This is done inside |\begingroup|/|\endgroup| and passed to the outer level.
+%    \begin{macrocode}
+  \else
+    \lst@CArg #1\relax\lst@CDef{}%
+        {\lst@BeginDelimInvisible\lst@escapemode{\ifx\^^M#2\lst@Lmodetrue\fi
+         \def\lst@escapebegin{#3}%
+         \def\lst@escapeend{#4}}}%
+        \@empty
+  \fi
+%    \end{macrocode}
+% If the escape does not end at EOL, we define the closing delimiter.
+%    \begin{macrocode}
+  \ifx\^^M#2\else
+    \lst@CArg #2\relax\lst@CDef{}%
+      {\lst@ifescape \expandafter\lst@EndDelimInvisible
+               \else \expandafter\lst@CArgEmpty \fi}%
+      \@empty
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{\textsf{fancyvrb} support}
+%
+% \begin{aspect}{fancyvrb}
+% If this aspect is loaded in the preamble, we will use |\AtBeginDocument| on
+%  the next few lines.
+% Otherwise the code is executed right now by |\@firstofone|.
+%    \begin{macrocode}
+\lst@BeginAspect{fancyvrb}
+\ifx \@nodocument\relax \expandafter\@firstofone
+                  \else \expandafter\AtBeginDocument \fi
+{%
+%    \end{macrocode}
+% If the \packagename{fancyvrb} package is not available, we give an error
+%  message and deactivate the key.
+% Otherwise we insert |\lst@FVVerbatimBegin| and |\lst@FVVerbatimEnd| where
+%  necessary.
+%    \begin{macrocode}
+  \@ifundefined{FancyVerbFormatLine}
+  {\lst@Error{fancyvrb support loaded, but the package is not present}\@ehc
+   \global\let\KV@lst@fancyvrb\@gobble}%
+  {\lst@AddTo\FV@VerbatimBegin\lst@FVVerbatimBegin
+   \lst@AddToAtTop\FV@VerbatimEnd\lst@FVVerbatimEnd
+   \lst@AddTo\FV@LVerbatimBegin\lst@FVVerbatimBegin
+   \lst@AddToAtTop\FV@LVerbatimEnd\lst@FVVerbatimEnd
+   \lst@AddTo\FV@BVerbatimBegin\lst@FVVerbatimBegin
+   \lst@AddToAtTop\FV@BVerbatimEnd\lst@FVVerbatimEnd}%
+}
+%    \end{macrocode}
+%
+% \begin{macro}{\lst@Fancyvrb}
+% This submacro of the key assigns the correct |\FancyVerbFormatLine| macro.
+%    \begin{macrocode}
+\gdef\lst@Fancyvrb{%
+  \lst@iffancyvrb
+    \ifx\FancyVerbFormatLine\lst@FVFancyVerbFormatLine\else
+      \let\lst@FVFL\FancyVerbFormatLine
+      \let\FancyVerbFormatLine\lst@FVFancyVerbFormatLine
+    \fi
+  \else
+    \ifx\lst@FVFL\@undefined\else
+      \let\FancyVerbFormatLine\lst@FVFL
+      \let\lst@FVFL\@undefined
+    \fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FVVerbatimBegin}
+% At the beginning we need to initialize things if the interface is activated.
+%    \begin{macrocode}
+\gdef\lst@FVVerbatimBegin{%
+  \ifx\FancyVerbFormatLine\lst@FVFancyVerbFormatLine
+      \lsthk@BoxUnsafe \lsthk@PreSet
+      \let\normalbaselines\relax
+%    \end{macrocode}
+% \begin{remark}{TODO}
+% Is this |\let| bad?
+% \end{remark}
+%    \begin{macrocode}
+    \lsthk@Init \lsthk@InitVars
+    \lsthk@InitVarsDisplay \lsthk@InitDisplay
+%TODO      \lst@ifresetmargins \advance\linewidth-\@totalleftmargin \fi
+    \lst@EnterMode{\lst@Pmode}{}%
+    \lst@SelectCharTable
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FVVerbatimEnd}
+% Currently we just call one hook if the interface is active.
+%    \begin{macrocode}
+\gdef\lst@FVVerbatimEnd{%
+  \ifx\FancyVerbFormatLine\lst@FVFancyVerbFormatLine
+    \lsthk@ExitDisplay
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FVFancyVerbFormatLine}
+% We convert the argument only if necessary, \ldots
+%  initialize scanning, \ldots
+%    \begin{macrocode}
+\gdef\lst@FVFancyVerbFormatLine#1{%
+  \ifx\FV@CommandChars\relax
+    \def\lst@arg{\lst@ScanNextChar#1^^@\lst@FVOutput}%
+  \else
+    \let\lst@arg\@empty \lst@false \lst@FVConvert#1\@nnil
+  \fi
+%    \end{macrocode}
+% prepare the |\vbox| (to allow line breaking), \ldots
+%    \begin{macrocode}
+  \vtop{\everypar{}\par\noindent
+        \lsthk@InitVarsBOL\lsthk@InitScanBOL \lsthk@InitProcessBOL
+%    \end{macrocode}
+% scan and output the line, and do some cleanup.
+%    \begin{macrocode}
+        \lst@arg
+        \lst@ifbreaklines \lst@parshape \fi
+        \lst@ifLmode \lst@LeaveMode \fi
+        \lst@tokenstream\@gobblethree{}{}{}%
+        \lsthk@EOL}}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@FVOutput}
+% outputs the collected token and stream without resetting too much variables
+%  since we are probably in the middle of a line.
+%    \begin{macrocode}
+\gdef\lst@FVOutput{%
+  \lst@AddTokenToStream
+  \lst@tokenstream\@gobblethree{}{}{}%
+  \let\lst@tokenstream\@empty}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{lstkey}{fvcmdparams}
+% \begin{lstkey}{morefvcmdparams}
+% These keys adjust |\lst@FVcmdparams|, which will be used by the following
+%  conversion macro.
+% The base set of commands and parameter numbers was provided by Denis Girou.
+%    \begin{macrocode}
+\lst@Key{fvcmdparams}{\overlay\@ne}{\def\lst@FVcmdparams{,#1}}
+\lst@Key{morefvcmdparams}\relax{\lst@lAddTo\lst@FVcmdparams{,#1}}
+%    \end{macrocode}
+% \end{lstkey}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@FVConvert}
+% \meta{fancyvrb content}|\@nnil|
+% adds the converted material to |\lst@arg|.
+% That macro should be empty at the beginning and |\lst@if| false.
+%
+% |\lst@if| indicates whether a |\lst@ScanNextChar| has been issued.
+% If true, we will insert |^^@\lst@FVOutput| from time to time.
+% But first we check for a group brace.
+% Since |\@ifnextchar\bgroup| fails if \packagename{fancyvrb}'s second
+%  commandchar is not |{|, we have to use |\ifcat| here.
+%    \begin{macrocode}
+\gdef\lst@FVConvert{\futurelet\@let@token\lst@FVConvert@}
+\gdef\lst@FVConvert@{%
+  \ifcat\noexpand\@let@token\bgroup \expandafter\lst@FVConvertArg
+                              \else \expandafter\lst@FVConvert@@ \fi}
+%    \end{macrocode}
+% In case of a braced argument, we first check |\lst@if|.
+% Then we convert the argument and add it together with braces to |\lst@arg|.
+% (And we continue the conversion.)
+%    \begin{macrocode}
+\gdef\lst@FVConvertArg#1{%
+  \lst@if \lst@lAddTo\lst@arg{^^@\lst@FVOutput}\lst@false \fi
+  {\let\lst@arg\@empty \lst@false
+   \lst@FVConvert #1\@nnil
+   \global\let\@gtempa\lst@arg}%
+  \lst@elAddTo\lst@arg{\expandafter{\@gtempa}}%
+  \lst@FVConvert}
+%    \end{macrocode}
+% Having no |\bgroup|, we look whether we've found the end of the input.
+% In that case we might insert the finish-up.
+%    \begin{macrocode}
+\gdef\lst@FVConvert@@#1{%
+  \ifx \@nnil#1%
+    \lst@if \lst@lAddTo\lst@arg{^^@\lst@FVOutput}\lst@false\fi
+  \else
+%    \end{macrocode}
+% A control sequence gets inserted \ldots
+%    \begin{macrocode}
+    \if\relax\noexpand#1%
+      \lst@if \lst@lAddTo\lst@arg{^^@\lst@FVOutput#1}%
+        \else \lst@lAddTo\lst@arg{#1}\lst@false \fi
+%    \end{macrocode}
+% checked against registered commands.
+% If the number |\@tempcnta| of arguments is zero, we just continue.
+% Otherwise we read these arguments and add them to |\lst@arg| without
+%  conversion.
+%    \begin{macrocode}
+      \def\lst@temp##1,#1##2,##3\@nil{\@tempcnta##2\relax}%
+      \expandafter\lst@temp\lst@FVcmdparams,#1\z@,\@nil
+      \ifnum\@tempcnta>\z@ \let\lst@next\lst@FVConvertCmd
+                     \else \let\lst@next\lst@FVConvert \fi
+    \else
+%    \end{macrocode}
+% Any other token is added (depending on |\lst@if|).
+%    \begin{macrocode}
+      \lst@if \lst@lAddTo\lst@arg{#1}%
+        \else \lst@lAddTo\lst@arg{\lst@ScanNextChar#1}\lst@true \fi
+      \let\lst@next\lst@FVConvert
+    \fi
+    \expandafter\lst@next
+  \fi}
+%    \end{macrocode}
+% As stated above, we insert arguments without conversion.
+%    \begin{macrocode}
+\gdef\lst@FVConvertCmd#1{%
+  \lst@lAddTo\lst@arg{{#1}}\advance\@tempcnta\m@ne
+  \ifnum\@tempcnta>\z@ \expandafter\lst@FVConvertCmd
+                 \else \expandafter\lst@FVConvert \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \subsection{Format definitions*}
+%
+% \begin{aspect}{formats}
+%    \begin{macrocode}
+\lst@BeginAspect{formats,format}
+%    \end{macrocode}
+%
+% \begin{macro}{\lstformatfiles}
+% This macro is defined if and only if it's undefined yet.
+%    \begin{macrocode}
+\@ifundefined{lstformatfiles}
+    {\lst@UserCommand\lstformatfiles{lstfmt0.sty}}{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lstdefineformat}
+% \begin{macro}{\lst@defineformat}
+% \begin{macro}{\lst@DefFormat}
+% are defined in terms of |\lst@DefFormat|, which is defined via
+% |\lst@DefDriver|.
+%    \begin{macrocode}
+\lst@UserCommand\lstdefineformat{\lst@DefFormat\iftrue}
+\lst@UserCommand\lst@defineformat{\lst@DefFormat\iffalse}
+\gdef\lst@DefFormat#1{\lst@DefDriver#1{format}\lst@UseFormat}
+%    \end{macrocode}
+% We provide the empty format.
+%    \begin{macrocode}
+\global\@namedef{lstformat@[]}{}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{lstkey}{format}
+% is another application to |\lst@SetDriver|.
+% We just specify the hook as `pre' and an empty argument as  `post' code.
+%    \begin{macrocode}
+\lst@Key{format}\relax{}%
+%%  \lst@SetDriver{format}{#1}\lstformatfiles\lsthk@SetFormat{}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\lst@AddToHook{SetFormat}{\let\lst@fmtformat\@empty}% init
+%    \end{macrocode}
+% \end{lstkey}
+%
+%
+% \paragraph{Helpers}
+% Our goal is to define the yet unkown |\lst@UseFormat|. This definition
+% will parse the user supplied format. We start with some general macros.
+%
+% \begin{macro}{\lst@fmtSplit}
+% splits the content of the macro |#1| at |#2| in the preceding characters
+% |\lst@fmta| and the following ones |\lst@fmtb|. |\lst@if| is false if and
+% only if |#1| doesn't contain |#2|.
+%    \begin{macrocode}
+\gdef\lst@fmtSplit#1#2{%
+  \def\lst@temp##1#2##2\relax##3{%
+    \ifnum##3=\z@
+      \ifx\@empty##2\@empty
+        \lst@false
+        \let\lst@fmta#1%
+        \let\lst@fmtb\@empty
+      \else
+        \expandafter\lst@temp#1\relax\@ne
+      \fi
+    \else
+      \def\lst@fmta{##1}\def\lst@fmtb{##2}%
+    \fi}%
+  \lst@true
+  \expandafter\lst@temp#1#2\relax\z@}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@IfNextCharWhitespace}
+% is defined in terms of |\lst@IfSubstring|.
+%    \begin{macrocode}
+\gdef\lst@IfNextCharWhitespace#1#2#3{%
+  \lst@IfSubstring#3\lst@whitespaces{#1}{#2}#3}
+%    \end{macrocode}
+% And here come all white space characters.
+%    \begin{macrocode}
+\begingroup
+\catcode`\^^I=12\catcode`\^^J=12\catcode`\^^M=12\catcode`\^^L=12\relax%
+%\lst@DefActive\lst@whitespaces{\ ^^I^^J^^M}% add ^^L
+\global\let\lst@whitespaces\lst@whitespaces%
+\endgroup
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@fmtIfIdentifier}
+% tests the first character of |#1|
+%    \begin{macrocode}
+\gdef\lst@fmtIfIdentifier#1{%
+  \ifx\relax#1\@empty \expandafter\@secondoftwo
+                \else \expandafter\lst@fmtIfIdentifier@\expandafter#1\fi}
+%    \end{macrocode}
+% against the `letters' |_|, |@|, |A|,\ldots,|Z| and |a|,\ldots,|z|.
+%    \begin{macrocode}
+\gdef\lst@fmtIfIdentifier@#1#2\relax{%
+    \let\lst@next\@secondoftwo
+    \ifnum`#1=`_\else
+    \ifnum`#1<64\else
+    \ifnum`#1<91\let\lst@next\@firstoftwo\else
+    \ifnum`#1<97\else
+    \ifnum`#1<123\let\lst@next\@firstoftwo\else
+    \fi \fi \fi \fi \fi
+    \lst@next}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@fmtIfNextCharIn}
+% is required for the optional \meta{exceptional characters}.
+%    \begin{macrocode}
+\gdef\lst@fmtIfNextCharIn#1{%
+    \ifx\@empty#1\@empty \expandafter\@secondoftwo \else
+                         \def\lst@next{\lst@fmtIfNextCharIn@{#1}}%
+                         \expandafter\lst@next\fi}
+\gdef\lst@fmtIfNextCharIn@#1#2#3#4{%
+    \def\lst@temp##1#4##2##3\relax{%
+        \ifx \@empty##2\expandafter\@secondoftwo
+                 \else \expandafter\@firstoftwo \fi}%
+    \lst@temp#1#4\@empty\relax{#2}{#3}#4}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@fmtCDef}
+% We need derivations of |\lst@CDef| and |\lst@CDefX|: we have to test the
+% next character against the sequence |#5| of exceptional characters.
+% These tests are inserted here.
+%    \begin{macrocode}
+\gdef\lst@fmtCDef#1{\lst@fmtCDef@#1}
+\gdef\lst@fmtCDef@#1#2#3#4#5#6#7{%
+    \lst@CDefIt#1{#2}{#3}%
+               {\lst@fmtIfNextCharIn{#5}{#4#2#3}{#6#4#2#3#7}}%
+               #4%
+               {}{}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@fmtCDefX}
+% The same but `drop input'.
+%    \begin{macrocode}
+\gdef\lst@fmtCDefX#1{\lst@fmtCDefX@#1}
+\gdef\lst@fmtCDefX@#1#2#3#4#5#6#7{%
+    \let#4#1%
+    \ifx\@empty#2\@empty
+        \def#1{\lst@fmtIfNextCharIn{#5}{#4}{#6#7}}%
+    \else \ifx\@empty#3\@empty
+        \def#1##1{%
+            \ifx##1#2%
+                \def\lst@next{\lst@fmtIfNextCharIn{#5}{#4##1}%
+                                                      {#6#7}}%
+            \else
+                 \def\lst@next{#4##1}%
+            \fi
+            \lst@next}%
+    \else
+        \def#1{%
+            \lst@IfNextCharsArg{#2#3}%
+                {\lst@fmtIfNextCharIn{#5}{\expandafter#4\lst@eaten}%
+                                         {#6#7}}%
+                {\expandafter#4\lst@eaten}}%
+    \fi \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \paragraph{The parser}
+% applies |\lst@fmtSplit| to cut a format definition into items, items into
+% `input' and `output', and `output' into `pre' and 'post'. This should be
+% clear if you are in touch with format definitions.
+%
+% \begin{macro}{\lst@UseFormat}
+% Now we can start with the parser.
+%    \begin{macrocode}
+\gdef\lst@UseFormat#1{%
+    \def\lst@fmtwhole{#1}%
+    \lst@UseFormat@}
+\gdef\lst@UseFormat@{%
+    \lst@fmtSplit\lst@fmtwhole,%
+%    \end{macrocode}
+% We assign the rest of the format definition, \ldots
+%    \begin{macrocode}
+    \let\lst@fmtwhole\lst@fmtb
+    \ifx\lst@fmta\@empty\else
+%    \end{macrocode}
+% \ldots\space split the item at the equal sign, and work on the item.
+%    \begin{macrocode}
+        \lst@fmtSplit\lst@fmta=%
+        \ifx\@empty\lst@fmta\else
+%    \end{macrocode}
+% \begin{remark}{TODO}
+% Insert |\let\lst@arg\@empty| |\expandafter\lst@XConvert\lst@fmtb\@nil|
+% |\let\lst@fmtb\lst@arg|.
+% \end{remark}
+%    \begin{macrocode}
+            \expandafter\lstKV@XOptArg\expandafter[\expandafter]%
+                \expandafter{\lst@fmtb}\lst@UseFormat@b
+        \fi
+    \fi
+%    \end{macrocode}
+% Finally we process the next item if the rest is not empty.
+%    \begin{macrocode}
+    \ifx\lst@fmtwhole\@empty\else
+        \expandafter\lst@UseFormat@
+    \fi}
+%    \end{macrocode}
+% We make |\lst@fmtc| contain the preceding characters as a braced argument.
+% To add more arguments, we first split the replacement tokens at the control
+% sequence |\string|.
+%    \begin{macrocode}
+\gdef\lst@UseFormat@b[#1]#2{%
+    \def\lst@fmtc{{#1}}\lst@lExtend\lst@fmtc{\expandafter{\lst@fmta}}%
+    \def\lst@fmtb{#2}%
+    \lst@fmtSplit\lst@fmtb\string
+%    \end{macrocode}
+% We append an empty argument or |\lst@fmtPre| with `|\string|-preceding'
+% tokens as argument. We do the same for the tokens after |\string|.
+%    \begin{macrocode}
+    \ifx\@empty\lst@fmta
+        \lst@lAddTo\lst@fmtc{{}}%
+    \else
+        \lst@lExtend\lst@fmtc{\expandafter
+            {\expandafter\lst@fmtPre\expandafter{\lst@fmta}}}%
+    \fi
+    \ifx\@empty\lst@fmtb
+        \lst@lAddTo\lst@fmtc{{}}%
+    \else
+        \lst@lExtend\lst@fmtc{\expandafter
+            {\expandafter\lst@fmtPost\expandafter{\lst@fmtb}}}%
+    \fi
+%    \end{macrocode}
+% Eventually we extend |\lst@fmtformat| appropriately. Note that |\lst@if|
+% still indicates whether the replacement tokens contain |\string|.
+%    \begin{macrocode}
+    \expandafter\lst@UseFormat@c\lst@fmtc}
+%    \end{macrocode}
+%    \begin{macrocode}
+\gdef\lst@UseFormat@c#1#2#3#4{%
+    \lst@fmtIfIdentifier#2\relax
+    {\lst@fmtIdentifier{#2}%
+     \lst@if\else \PackageWarning{Listings}%
+         {Cannot drop identifier in format definition}%
+     \fi}%
+    {\lst@if
+         \lst@lAddTo\lst@fmtformat{\lst@CArgX#2\relax\lst@fmtCDef}%
+     \else
+         \lst@lAddTo\lst@fmtformat{\lst@CArgX#2\relax\lst@fmtCDefX}%
+     \fi
+     \lst@DefActive\lst@fmtc{#1}%
+     \lst@lExtend\lst@fmtformat{\expandafter{\lst@fmtc}{#3}{#4}}}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\lst@AddToHook{SelectCharTable}{\lst@fmtformat}
+\global\let\lst@fmtformat\@empty
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \paragraph{The formatting}
+%
+% \begin{macro}{\lst@fmtPre}
+%    \begin{macrocode}
+\gdef\lst@fmtPre#1{%
+    \lst@PrintToken
+    \begingroup
+    \let\newline\lst@fmtEnsureNewLine
+    \let\space\lst@fmtEnsureSpace
+    \let\indent\lst@fmtIndent
+    \let\noindent\lst@fmtNoindent
+    #1%
+    \endgroup}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@fmtPost}
+%    \begin{macrocode}
+\gdef\lst@fmtPost#1{%
+    \global\let\lst@fmtPostOutput\@empty
+    \begingroup
+    \def\newline{\lst@AddTo\lst@fmtPostOutput\lst@fmtEnsureNewLine}%
+    \def\space{\aftergroup\lst@fmtEnsurePostSpace}%
+    \def\indent{\lst@AddTo\lst@fmtPostOutput\lst@fmtIndent}%
+    \def\noindent{\lst@AddTo\lst@fmtPostOutput\lst@fmtNoindent}%
+    \aftergroup\lst@PrintToken
+    #1%
+    \endgroup}
+%    \end{macrocode}
+%    \begin{macrocode}
+\lst@AddToHook{Init}{\global\let\lst@fmtPostOutput\@empty}
+\lst@AddToHook{PostOutput}
+    {\lst@fmtPostOutput \global\let\lst@fmtPostOutput\@empty}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@fmtEnsureSpace}
+% \begin{macro}{\lst@fmtEnsurePostSpace}
+%    \begin{macrocode}
+\gdef\lst@fmtEnsureSpace{%
+    \lst@ifwhitespace\else \expandafter\lst@ProcessSpace \fi}
+\gdef\lst@fmtEnsurePostSpace{%
+    \lst@IfNextCharWhitespace{}{\lst@ProcessSpace}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{lstkey}{fmtindent}
+% \begin{macro}{\lst@fmtIndent}
+% \begin{macro}{\lst@fmtNoindent}
+%    \begin{macrocode}
+\lst@Key{fmtindent}{20pt}{\def\lst@fmtindent{#1}}
+\newdimen\lst@fmtcurrindent
+\lst@AddToHook{InitVars}{\global\lst@fmtcurrindent\z@}
+\gdef\lst@fmtIndent{\global\advance\lst@fmtcurrindent\lst@fmtindent}
+\gdef\lst@fmtNoindent{\global\advance\lst@fmtcurrindent-\lst@fmtindent}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{lstkey}
+%
+% \begin{macro}{\lst@fmtEnsureNewLine}
+%    \begin{macrocode}
+\gdef\lst@fmtEnsureNewLine{%
+    \global\advance\lst@newlines\@ne
+    \global\advance\lst@newlinesensured\@ne
+    \lst@fmtignoretrue}
+%    \end{macrocode}
+%    \begin{macrocode}
+\gdef\lst@DoNewLines{}% UNUSED in new version
+\lst@AddToAtTop\lst@DoNewLines{%
+    \ifnum\lst@newlines>\lst@newlinesensured
+        \global\advance\lst@newlines-\lst@newlinesensured
+    \fi
+    \global\lst@newlinesensured\z@}
+\newcount\lst@newlinesensured % global
+\lst@AddToHook{Init}{\global\lst@newlinesensured\z@}
+%    \end{macrocode}
+%    \begin{macrocode}
+\gdef\lst@fmtignoretrue{\let\lst@fmtifignore\iftrue}
+\gdef\lst@fmtignorefalse{\let\lst@fmtifignore\iffalse}
+\lst@AddToHook{InitVars}{\lst@fmtignorefalse}
+\lst@AddToHook{Output}{\lst@fmtignorefalse}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@fmtUseLostSpace}
+%    \begin{macrocode}
+\gdef\lst@fmtUseLostSpace{%
+    \lst@ifnewline \kern\lst@fmtcurrindent \global\lst@lostspace\z@
+    \else
+        \lst@OldOLS
+    \fi}
+\lst@AddToHook{Init}
+    {\lst@true
+     \ifx\lst@fmtformat\@empty \ifx\lst@fmt\@empty \lst@false \fi\fi
+     \lst@if
+        \let\lst@OldOLS\lst@OutputLostSpace
+        \let\lst@OutputLostSpace\lst@fmtUseLostSpace
+        \let\lst@ProcessSpace\lst@fmtProcessSpace
+     \fi}
+%    \end{macrocode}
+% \begin{remark}{TODO}
+% This `lost space' doesn't use |\lst@alloverstyle| yet!
+% \end{remark}
+% \end{macro}
+%
+% \begin{macro}{\lst@fmtProcessSpace}
+%    \begin{macrocode}
+\gdef\lst@fmtProcessSpace{%
+    \lst@ifletter
+        \lst@Output
+        \lst@fmtifignore\else
+            \lst@AppendOther\lst@outputspace
+        \fi
+    \else \lst@ifkeepspaces
+        \lst@AppendOther\lst@outputspace
+    \else \ifnum\lst@newlines=\z@
+        \lst@AppendSpecialSpace
+    \else \ifnum\lst@length=\z@
+            \global\advance\lst@lostspace\lst@width
+            \global\advance\lst@pos\m@ne
+        \else
+            \lst@AppendSpecialSpace
+        \fi
+    \fi \fi \fi
+    \lst@whitespacetrue}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \paragraph{Formatting identifiers}
+%
+% \begin{macro}{\lst@fmtIdentifier}
+% We install a (keyword) test for the `format identifiers'.
+%    \begin{macrocode}
+\lst@InstallTest{f}
+    \lst@fmt@list\lst@fmt \lst@gfmt@list\lst@gfmt
+    \lst@gfmt@wp
+    wd
+\gdef\lst@fmt@list{\lst@fmt\lst@gfmt}\global\let\lst@fmt\@empty
+\gdef\lst@gfmt@list{\lst@fmt\lst@gfmt}\global\let\lst@gfmt\@empty
+%    \end{macrocode}
+% The working procedure expands |\lst@fmt$|\meta{string} (and defines
+% |\lst@PrintToken| to do nothing).
+%    \begin{macrocode}
+\gdef\lst@gfmt@wp{%
+    \begingroup \let\lst@UM\@empty
+    \let\lst@PrintToken\@empty
+    \csname\@lst @fmt$\the\lst@token\endcsname
+    \endgroup}
+%    \end{macrocode}
+% This control sequence is probably defined as `working identifier'.
+%    \begin{macrocode}
+\gdef\lst@fmtIdentifier#1#2#3#4{%
+    \lst@DefOther\lst@fmta{#2}\edef\lst@fmt{\lst@fmt,\lst@fmta}%
+    \@namedef{\@lst @fmt$\lst@fmta}{#3#4}}
+%    \end{macrocode}
+% |\lst@fmt$|\meta{identifier} expands to a |\lst@fmtPre|/|\lst@fmtPost|
+% sequence defined by |#2| and |#3|.
+% \end{macro}
+%
+%    \begin{macrocode}
+\lst@EndAspect
+%</aspects>
+%    \end{macrocode}
+% \end{aspect}
+%
+%
+% \section{Documentation support*}
+%
+% \begin{syntax}
+% \item[0.19]
+%   |\begin{lstsample}|\marg{point list}\marg{left}\marg{right}
+%
+%   \leavevmode\hspace*{-\leftmargini}|\end{lstsample}|
+%
+%       Roughly speaking all material in between this environment is executed
+%       `on the left side' and typeset verbatim on the right. \meta{left} is
+%       executed before the left side is typeset, and similarly \meta{right}
+%       before the right-hand side.
+%
+%       \meta{point list} is used as argument to the \keyname{point} key.
+%       This is a special key used to highlight the keys in the examples.
+%
+% \item[1.0]
+%   |\begin{lstxsample}|\marg{point list}
+%
+%   \leavevmode\hspace*{-\leftmargini}|\end{lstxsample}|
+%
+%       The material in between is (a) added to the left side of the next
+%       \texttt{lstsample} environment and (b) typeset verbatim using the
+%       whole line width.
+%
+% \item[0.21] |\newdocenvironment|\marg{name}\marg{short name}\marg{begin code}\marg{end code}
+%
+%       The \meta{name} environment can be used in the same way as `macro'.
+%       The provided(!) definitions
+%           |\Print|\meta{short name}|Name|
+%       and |\SpecialMain|\meta{short name}|Index|
+%       control printing in the margin and indexing as the defaults
+%       |\PrintMacroName| and |\SpecialMainIndex| do.
+%
+%       This command is used to define the `aspect' and `lstkey' environments.
+%
+%\item[0.21] \texttt{macroargs} environment
+%
+%       This `enumerate' environment uses as labels `|#1| =', `|#2| =',
+%       and so on.
+%
+% \item \texttt{remark} environment
+%
+%       These environments enclose comments on `to do's', alternatives and
+%       removed or old definitions.
+%
+% \item[0.21] |\lstscanlanguages|\meta{list macro}\marg{input files}\marg{don't input}
+%
+%       scans \marg{input files}$\setminus$\marg{don't input} for language
+%       definitions. The available languages are stored in \meta{list macro}
+%       using the form \meta{language}|(|\meta{dialtect}|),|.
+%
+% \item[0.21] |\lstprintlanguages|\meta{list macro}
+%
+%       prints the languages in two column format.
+% \end{syntax}
+% and a lot of more simple commands.
+%
+%
+% \subsection{Required packages}
+%
+% Most of the `required' packages are optional.
+% \lsthelper{Stephan Hennig}{2006-09-25}{documentation incompatible with algorithmic}
+% noted a bug where |\ifalgorithmic| conflicts with an update to |algorithmic.sty|, so
+% this has been changed to |\iflstalgorithmic|.
+%    \begin{macrocode}
+%<*reserved>
+\lst@BeginAspect{}
+%</reserved>
+%<*doc>
+%    \end{macrocode}
+%    \begin{macrocode}
+\RequirePackage[writemacro,language,style]{listings2}[2008/10/01]
+\let\lstdoc@currversion\fileversion
+%    \end{macrocode}
+%    \begin{macrocode}
+\newif\iflstfancyvrb \IfFileExists{fancyvrb.sty}{\lstfancyvrbtrue}{}
+\iflstfancyvrb \RequirePackage{fancyvrb}\fi
+%    \end{macrocode}
+%    \begin{macrocode}
+\newif\iflstcolor \IfFileExists{color.sty}{\lstcolortrue}{}
+\iflstcolor \RequirePackage{color}\fi
+%    \end{macrocode}
+%    \begin{macrocode}
+\lst@false
+\newif\iflsthyper
+\@ifundefined{pdfoutput}{}{\ifnum\pdfoutput>\z@ \lst@true \fi}
+\@ifundefined{VTeXversion}{}{\ifnum\OpMode>\z@ \lst@true \fi}
+\lst@if \IfFileExists{hyperref.sty}{\lsthypertrue}{}\fi
+%    \end{macrocode}
+%    \begin{macrocode}
+\newif\iflstalgorithmic \IfFileExists{algorithmic.sty}{\lstalgorithmictrue}{}
+\iflstalgorithmic \RequirePackage{algorithmic}\fi
+%    \end{macrocode}
+%    \begin{macrocode}
+\newif\iflstlgrind \IfFileExists{lgrind.sty}{\lstlgrindtrue}{}
+\iflstlgrind \RequirePackage{lgrind}\fi
+\iflsthyper \RequirePackage[colorlinks]{hyperref}%
+      \else \def\href#1{\texttt}\fi
+%    \end{macrocode}
+%    \begin{macrocode}
+\RequirePackage{nameref,url}
+\renewcommand\ref{\protect\T@ref}
+\renewcommand\pageref{\protect\T@pageref}
+%    \end{macrocode}
+%
+%
+% \subsection{Environments for notes}
+%
+% \begin{environment}{remark}
+% We begin with two simple definitions, \ldots
+%    \begin{macrocode}
+\newenvironment{remark}[1]
+    {\quote \topsep\z@ \let\small\footnotesize \small#1:}
+    {\endquote}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{advise}
+% \begin{macro}{\advisespace}
+% The environment uses |\@listi|.
+%    \begin{macrocode}
+\def\advise{\par\list{$\to$}
+    {\advance\linewidth\@totalleftmargin
+     \@totalleftmargin\z@
+     \@listi
+     \let\small\footnotesize \small\sffamily
+     \parsep \z@ \@plus\z@ \@minus\z@
+     \topsep6\p@ \@plus1\p@\@minus2\p@
+     \def\makelabel##1{\hss\llap{##1}}}}
+\let\endadvise\endlist
+%    \end{macrocode}
+%    \begin{macrocode}
+\def\advisespace{\hbox{}\qquad}
+%    \end{macrocode}
+% \end{macro}
+% \end{environment}
+%
+% \begin{environment}{syntax}
+% \begin{macro}{\syntaxbreak}
+% \begin{macro}{\syntaxnewline}
+% \begin{macro}{\syntaxor}
+% This environment uses |\list| with a special |\makelabel|, \ldots
+%    \begin{macrocode}
+\newenvironment{syntax}
+   {\list{}{\itemindent-\leftmargin
+    \def\makelabel##1{\hss\lst@syntaxlabel##1,,,,\relax}}}
+   {\endlist}
+%    \end{macrocode}
+% which is defined here. The comma separated items are placed as needed.
+%    \begin{macrocode}
+\def\lst@syntaxlabel#1,#2,#3,#4\relax{%
+    \llap{\scriptsize\itshape#3}%
+    \def\lst@temp{#2}%
+    \expandafter\lst@syntaxlabel@\meaning\lst@temp\relax
+    \rlap{\hskip-\itemindent\hskip\itemsep\hskip\linewidth
+          \llap{\ttfamily\lst@temp}\hskip\labelwidth
+          \def\lst@temp{#1}%
+          \ifx\lst@temp\lstdoc@currversion#1\fi}}
+\def\lst@syntaxlabel@#1>#2\relax
+    {\edef\lst@temp{\zap@space#2 \@empty}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\newcommand*\syntaxnewline{\newline\hbox{}\kern\labelwidth}
+\newcommand*\syntaxor{\qquad or\qquad}
+\newcommand*\syntaxbreak
+    {\hfill\kern0pt\discretionary{}{\kern\labelwidth}{}}
+\let\syntaxfill\hfill
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{environment}
+%
+% \begin{macro}{\alternative}
+% iterates down the list and inserts vertical rule(s).
+% |\lst@true| prevents a rule in front of the first item.
+%    \begin{macrocode}
+\def\alternative#1{\lst@true \alternative@#1,\relax,}
+\def\alternative@#1,{%
+  \ifx \relax#1\@empty \else
+    \ifx\@empty#1\@empty\else
+      \lst@if \lst@false \else $\vert$\fi
+      \textup{\texttt{#1}}%
+    \fi
+    \expandafter\alternative@
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Extensions to \textsf{doc}}
+%
+% \begin{macro}{\m@cro@}
+% We need a slight modification of \packagename{doc}'s internal macro.
+% The former argument |#2| has become |#3|.
+% This change is not marked below.
+% The second argument is now \meta{short name}.
+%    \begin{macrocode}
+\long\def\m@cro@#1#2#3{\endgroup \topsep\MacroTopsep \trivlist
+  \edef\saved@macroname{\string#3}%
+  \def\makelabel##1{\llap{##1}}%
+  \if@inlabel
+    \let\@tempa\@empty \count@\macro@cnt
+    \loop \ifnum\count@>\z@
+      \edef\@tempa{\@tempa\hbox{\strut}}\advance\count@\m@ne \repeat
+    \edef\makelabel##1{\llap{\vtop to\baselineskip
+                               {\@tempa\hbox{##1}\vss}}}%
+    \advance \macro@cnt \@ne
+  \else  \macro@cnt\@ne  \fi
+  \edef\@tempa{\noexpand\item[%
+     #1%
+       \noexpand\PrintMacroName
+     \else
+%    \end{macrocode}
+% The next line has been modified.
+%    \begin{macrocode}
+       \expandafter\noexpand\csname Print#2Name\endcsname % MODIFIED
+     \fi
+     {\string#3}]}%
+  \@tempa
+  \global\advance\c@CodelineNo\@ne
+   #1%
+      \SpecialMainIndex{#3}\nobreak
+      \DoNotIndex{#3}%
+   \else
+%    \end{macrocode}
+% Ditto.
+%    \begin{macrocode}
+      \csname SpecialMain#2Index\endcsname{#3}\nobreak % MODIFIED
+   \fi
+  \global\advance\c@CodelineNo\m@ne
+  \ignorespaces}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\macro}
+% \begin{macro}{\environment}
+% These two definitions need small adjustments due to the modified |\m@cro@|.
+%    \begin{macrocode}
+\def\macro{\begingroup
+   \catcode`\\12
+   \MakePrivateLetters \m@cro@ \iftrue {Macro}}% MODIFIED
+\def\environment{\begingroup
+   \catcode`\\12
+   \MakePrivateLetters \m@cro@ \iffalse {Env}}% MODIFIED
+%    \end{macrocode}
+% \end{macro}\end{macro}
+%
+% \begin{macro}{\newdocenvironment}
+% This command simply makes definitions similar to `environment' and provides
+%  the printing and indexing commands.
+%    \begin{macrocode}
+\def\newdocenvironment#1#2#3#4{%
+  \@namedef{#1}{#3\begingroup \catcode`\\12\relax
+                \MakePrivateLetters \m@cro@ \iffalse {#2}}%
+  \@namedef{end#1}{#4\endmacro}%
+  \@ifundefined{Print#2Name}{\expandafter
+      \let\csname Print#2Name\endcsname\PrintMacroName}{}%
+  \@ifundefined{SpecialMain#2Index}{\expandafter
+      \let\csname SpecialMain#2Index\endcsname\SpecialMainIndex}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{aspect}
+% \begin{macro}{\PrintAspectName}
+% \begin{macro}{\SpecialMainAspectIndex}
+% The environment and its `print' and `index' commands.
+%    \begin{macrocode}
+\newdocenvironment{aspect}{Aspect}{}{}
+\def\PrintAspectName#1{}
+\def\SpecialMainAspectIndex#1{%
+    \@bsphack
+    \index{aspects:\levelchar\protect\aspectname{#1}}%
+    \@esphack}
+%    \end{macrocode}
+% \end{macro}\end{macro}\end{environment}
+%
+% \begin{environment}{lstkey}
+% \begin{macro}{\PrintKeyName}
+% \begin{macro}{\SpecialMainKeyIndex}
+% One more environment with its `print' and `index' commands.
+%    \begin{macrocode}
+\newdocenvironment{lstkey}{Key}{}{}
+\def\PrintKeyName#1{\strut\keyname{#1}\ }
+\def\SpecialMainKeyIndex#1{%
+    \@bsphack
+    \index{keys\levelchar\protect\keyname{#1}}%
+    \@esphack}
+%    \end{macrocode}
+% \end{macro}\end{macro}\end{environment}
+%
+% \begin{macro}{\labelargcount}
+% \begin{environment}{macroargs}
+% We just allocate a counter and use \LaTeX's |\list| to implement this
+% environment.
+%    \begin{macrocode}
+\newcounter{argcount}
+\def\labelargcount{\texttt{\#\arabic{argcount}}\hskip\labelsep$=$}
+%    \end{macrocode}
+%    \begin{macrocode}
+\def\macroargs{\list\labelargcount
+    {\usecounter{argcount}\leftmargin=2\leftmargin
+     \parsep \z@ \@plus\z@ \@minus\z@
+     \topsep4\p@ \@plus\p@ \@minus2\p@
+     \itemsep\z@ \@plus\z@ \@minus\z@
+     \def\makelabel##1{\hss\llap{##1}}}}
+\def\endmacroargs{\endlist\@endparenv}
+%    \end{macrocode}
+% \end{environment}\end{macro}
+%
+% \begin{environment}{macrocode}
+%    \begin{macrocode}
+\def\macrocode{%
+  \macro@code \frenchspacing \@vobeyspaces
+  \advance\columnwidth33.66pt\advance\rightskip-33.66pt\relax
+  \xmacro@code}
+%    \end{macrocode}
+% \end{environment}
+%
+%
+% \subsection{The \texttt{lstsample} environment}
+%
+% \begin{environment}{lstsample}
+% We store the verbatim part and write the source code also to file.
+%    \begin{macrocode}
+\newbox\lst@samplebox
+\lstnewenvironment{lstsample}[3][]
+    {\global\let\lst@intname\@empty
+     \gdef\lst@sample{#2}%
+     \setbox\lst@samplebox=\vbox\bgroup\hsize=\lst@linewidth\relax
+         \setkeys{lst}{language={},style={},tabsize=4,gobble=5,%
+                       basicstyle=\small\ttfamily,columns=fullflexible,%
+                       boxpos=c,%
+                       point={#1},writemacro=\lst@originalcode}%
+         \KV@lst@belowskip\z@
+         \KV@lst@aboveskip\z@
+         #3}
+    {\egroup
+%    \end{macrocode}
+% Now |\lst@samplebox| contains the verbatim part.
+% If it's too wide, we use atop and below instead of left and right.
+%    \begin{macrocode}
+     \ifdim \lst@maxwidth>.5\linewidth
+         \begin{center}%
+             \hbox to\linewidth{\box\lst@samplebox\hss}%
+         \removelastskip
+         \end{center}%
+         \removelastskip
+         \lst@sampleInput
+     \else
+         \begin{center}%
+         \begin{minipage}{0.45\linewidth}%
+           \leavevmode\lst@sampleInput
+         \end{minipage}%
+         \qquad
+         \begin{minipage}{0.45\linewidth}%
+             \hbox to\linewidth{\box\lst@samplebox\hss}%
+         \end{minipage}%
+         \end{center}%
+     \fi}
+%    \end{macrocode}
+% The new keyword class \keyname{point}.
+%    \begin{macrocode}
+\lst@InstallClass{p}{point}{pointstyle}\relax{keywordstyle}{}l
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{lstxsample}
+% Omitting |\lst@EndWriteFile| leaves the file open.
+%    \begin{macrocode}
+\lstnewenvironment{lstxsample}[1][]
+  {\setkeys{lst}{belowskip=-\medskipamount,language={},style={},%
+             tabsize=4,gobble=5,
+             basicstyle=\small\ttfamily,columns=fullflexible,%
+             point={#1},writemacro=\lst@originalcode}}
+  {}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{macro}{\lst@sampleInput}
+% inputs the `left-hand' side.
+%    \begin{macrocode}
+\def\lst@sampleInput{%
+  \MakePercentComment\catcode`\^^M=10\relax
+  \small\lst@sample
+  {\endlinechar\active \newlinechar\active
+   \catcode\active=9\relax \catcode`\%=14\relax
+   \scantokens\expandafter{\lst@originalcode}}%
+   \global\let\lst@originalcode\@empty
+   \MakePercentIgnore}%
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Miscellaneous}
+%
+% \paragraph{Sectioning and cross referencing}
+% We begin with a redefinition paragraph.
+%    \begin{macrocode}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                                      {1.25ex \@plus1ex \@minus.2ex}%
+                                      {-1em}%
+                                      {\normalfont\normalsize\bfseries}}
+%    \end{macrocode}
+% We introduce |\lstref| which prints section number together with its name.
+%    \begin{macrocode}
+\def\lstref#1{\emph{\ref{#1} \nameref{#1}}}
+%    \end{macrocode}
+% Moreover we adjust the table of contents.  The |\phantomsection| before
+% adding the contents line provides \packagename{hyperref} with an appropriate
+% destination for the contents line link, thereby ensuring that the contents
+% line is at the right level in the PDF bookmark tree.
+%    \begin{macrocode}
+\def\@part[#1]#2{\iflsthyper\phantomsection\fi
+    \addcontentsline{toc}{part}{#1}%
+    {\parindent\z@ \raggedright \interlinepenalty\@M
+     \normalfont \huge \bfseries #2\markboth{}{}\par}%
+    \nobreak\vskip 3ex\@afterheading}
+\renewcommand*\l@section[2]{%
+    \par
+    \addpenalty\@secpenalty
+    \addvspace{.25em \@plus\p@}%
+    \setlength\@tempdima{1.5em}%
+    \begingroup
+      \parindent \z@ \rightskip \@pnumwidth
+      \parfillskip -\@pnumwidth
+      \leavevmode
+      \advance\leftskip\@tempdima
+      \hskip -\leftskip
+      #1\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+    \endgroup}
+\renewcommand*\l@subsection{\lst@true\@dottedtocline{2}{0pt}{2.3em}}
+\renewcommand*\l@subsubsection[2]{%
+  \lst@if \par\raggedright
+          \leftskip2.3em\relax \rightskip\@tocrmarg\relax
+          \lst@false
+    \else \hbox{}\space\(\cdot\)\space\fi
+  {\footnotesize{\let\numberline\@gobble #1}~#2}\ignorespaces}
+%    \end{macrocode}
+%
+% \paragraph{Indexing}
+% The `user' commands. |\rstyle| is defined below.
+%    \begin{macrocode}
+\newcommand\ikeyname[1]{%
+    \lstkeyindex{#1}{}%
+    \lstaspectindex{#1}{}%
+    \keyname{#1}}
+\newcommand\rkeyname[1]{%
+    \@bsphack
+    \lstkeyindex{#1}{}%
+    \lstaspectindex{#1}{}%
+    \@esphack{\rstyle\keyname{#1}}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\newcommand\icmdname[1]{%
+    \@bsphack
+    \lstaspectindex{#1}{}%
+    \@esphack\texttt{\string#1}}
+\newcommand\rcmdname[1]{%
+    \@bsphack
+    \lstaspectindex{#1}{}%
+    \@esphack\texttt{\rstyle\string#1}}
+%    \end{macrocode}
+% One of the two yet unknown `index'-macros is empty, the other looks up
+% the aspect name for the given argument.
+%    \begin{macrocode}
+\def\lstaspectindex#1#2{%
+    \global\@namedef{lstkandc@\string#1}{}%
+    \@ifundefined{lstisaspect@\string#1}
+        {\index{unknown\levelchar
+                \protect\texttt{\protect\string\string#1}#2}}%
+        {\index{\@nameuse{lstisaspect@\string#1}\levelchar
+                \protect\texttt{\protect\string\string#1}#2}}%
+}
+\def\lstkeyindex#1#2{%
+%    \index{key\levelchar\protect\keyname{#1}#2}%
+}
+%    \end{macrocode}
+% The key/command to aspect relation is defined near the top of this file using
+% the following command. In future the package should read this information
+% from the aspect files.
+%    \begin{macrocode}
+\def\lstisaspect[#1]#2{%
+    \global\@namedef{lstaspect@#1}{#2}%
+    \lst@AddTo\lst@allkeysandcmds{,#2}%
+    \@for\lst@temp:=#2\do
+    {\ifx\@empty\lst@temp\else
+         \global\@namedef{lstisaspect@\lst@temp}{#1}%
+     \fi}}
+\gdef\lst@allkeysandcmds{}
+%    \end{macrocode}
+% This relation is also good to print all keys and commands of a particular
+% aspect \ldots
+%    \begin{macrocode}
+\def\lstprintaspectkeysandcmds#1{%
+    \lst@true
+    \expandafter\@for\expandafter\lst@temp
+    \expandafter:\expandafter=\csname lstaspect@#1\endcsname\do
+    {\lst@if\lst@false\else, \fi \texttt{\lst@temp}}}
+%    \end{macrocode}
+% \ldots\ or to check the reference. Note that we've defined
+% |\lstkandc@|\meta{name} in |\lstaspectindex|.
+%    \begin{macrocode}
+\def\lstcheckreference{%
+   \@for\lst@temp:=\lst@allkeysandcmds\do
+   {\ifx\lst@temp\@empty\else
+        \@ifundefined{lstkandc@\lst@temp}
+        {\typeout{\lst@temp\space not in reference guide?}}{}%
+    \fi}}
+%    \end{macrocode}
+%
+% \paragraph{Unique styles}
+%    \begin{macrocode}
+\newcommand*\lst{\texttt{lst}}
+\newcommand*\Cpp{C\texttt{++}}
+\let\keyname\texttt
+\let\keyvalue\texttt
+\let\hookname\texttt
+\newcommand*\aspectname[1]{{\normalfont\sffamily#1}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\DeclareRobustCommand\packagename[1]{%
+    {\leavevmode\text@command{#1}%
+     \switchfontfamily\sfdefault\rmdefault
+     \check@icl #1\check@icr
+     \expandafter}}%
+\renewcommand\packagename[1]{{\normalfont\sffamily#1}}
+\def\switchfontfamily#1#2{%
+    \begingroup\xdef\@gtempa{#1}\endgroup
+    \ifx\f@family\@gtempa\fontfamily#2%
+                    \else\fontfamily#1\fi
+    \selectfont}
+%    \end{macrocode}
+% The color mainly for keys and commands in the reference guide.
+%    \begin{macrocode}
+\iflstcolor
+    \definecolor{darkgreen}{rgb}{0,0.5,0}
+    \def\rstyle{\color{darkgreen}}
+\else
+    \let\rstyle\empty
+\fi
+%    \end{macrocode}
+%
+% \paragraph{Commands for credits and helpers}
+%    \begin{macrocode}
+\gdef\lst@emails{}
+\newcommand*\lstthanks[2]
+    {#1\lst@AddTo\lst@emails{,#1,<#2>}%
+     \ifx\@empty#2\@empty\typeout{Missing email for #1}\fi}
+\newcommand*\lsthelper[3]
+    {{\let~\ #1}%
+     \lst@IfOneOf#1\relax\lst@emails
+     {}{\typeout{^^JWarning: Unknown helper #1.^^J}}}
+%    \end{macrocode}
+%
+% \paragraph{Languages and styles}
+%    \begin{macrocode}
+\lstdefinelanguage[doc]{Pascal}{%
+  morekeywords={alfa,and,array,begin,boolean,byte,case,char,const,div,%
+     do,downto,else,end,false,file,for,function,get,goto,if,in,%
+     integer,label,maxint,mod,new,not,of,or,pack,packed,page,program,%
+     procedure,put,read,readln,real,record,repeat,reset,rewrite,set,%
+     text,then,to,true,type,unpack,until,var,while,with,write,writeln},%
+  sensitive=false,%
+  morecomment=[s]{(*}{*)},%
+  morecomment=[s]{\{}{\}},%
+  morestring=[d]{'}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\lstdefinestyle{}
+    {basicstyle={},%
+     keywordstyle=\bfseries,identifierstyle={},%
+     commentstyle=\itshape,stringstyle={},%
+     numberstyle={},stepnumber=1,%
+     pointstyle=\pointstyle}
+\def\pointstyle{%
+    %{\let\lst@um\@empty \xdef\@gtempa{\the\lst@token}}%
+    %\expandafter\lstkeyindex\expandafter{\@gtempa}{}%
+    %\expandafter\lstaspectindex\expandafter{\@gtempa}{}%
+% indexing deactivated above
+    \rstyle}
+\lstsetup{defaultdialect=[doc]Pascal,language=Pascal,style={}}
+%    \end{macrocode}
+%
+%
+% \subsection{Scanning languages}
+%
+% \begin{macro}{\lstscanlanguages}
+% We modify some internal definitions and input the files.
+%    \begin{macrocode}
+\def\lstscanlanguages#1#2#3{%
+  \begingroup
+    \MakePercentComment
+    \def\lst@DefDriver@@##1##2[##3]##4{%
+      \lst@lAddTo\lst@scan{##4(##3),}%
+      \begingroup
+      \lst@DefDriver@Def\iffalse{##1}{##2}[##3]{##4}}%
+    \lst@InputCatcodes
+    \def\lst@dontinput{#3}%
+    \let\lst@scan\@empty
+    \lst@for{#2}\do{\lst@IfOneOf##1\relax\lst@dontinput
+                    {}%
+                    {\InputIfFileExists{##1}{}{}}}%
+    \global\let\@gtempa\lst@scan
+  \endgroup
+  \let#1\@gtempa}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lstprintlanguages}
+% |\do| creates a box of width 0.5|\linewidth| or |\linewidth| depending
+% on how wide the argument is. This leads to `two column' output.
+% The other main thing is sorting the list and begin with the output.
+%    \begin{macrocode}
+\def\lstprintlanguages#1{%
+    \def\do##1{\setbox\@tempboxa\hbox{##1\space\space}%
+        \ifdim\wd\@tempboxa<.5\linewidth \wd\@tempboxa.5\linewidth
+                                   \else \wd\@tempboxa\linewidth \fi
+        \box\@tempboxa\allowbreak}%
+    \begin{quote}
+      \par\noindent
+      \hyphenpenalty=\@M \rightskip=\z@\@plus\linewidth\relax
+      \lst@BubbleSort#1%
+      \expandafter\lst@NextLanguage#1\relax(\relax),%
+    \end{quote}}
+%    \end{macrocode}
+% We get and define the current language and \ldots
+%    \begin{macrocode}
+\def\lst@NextLanguage#1(#2),{%
+    \ifx\relax#1\else
+        \def\lst@language{#1}\def\lst@dialects{(#2),}%
+        \expandafter\lst@NextLanguage@
+    \fi}
+%    \end{macrocode}
+% \ldots\space gather all available dialect of this language (note that the
+% list has been sorted)
+%    \begin{macrocode}
+\def\lst@NextLanguage@#1(#2),{%
+    \def\lst@temp{#1}%
+    \ifx\lst@temp\lst@language
+        \lst@lAddTo\lst@dialects{(#2),}%
+        \expandafter\lst@NextLanguage@
+    \else
+%    \end{macrocode}
+% or begin to print this language with all its dialects. Therefor we sort the
+% dialects
+%    \begin{macrocode}
+        \do{\lst@language
+        \ifx\lst@dialects\lst@emptydialect\else
+            \expandafter\lst@NormedDef\expandafter\lst@language
+                \expandafter{\lst@language}%
+            \space(%
+            \lst@BubbleSort\lst@dialects
+            \expandafter\lst@PrintDialects\lst@dialects(\relax),%
+            )%
+        \fi}%
+        \def\lst@next{\lst@NextLanguage#1(#2),}%
+        \expandafter\lst@next
+    \fi}
+\def\lst@emptydialect{(),}
+%    \end{macrocode}
+% and print the dialect with appropriate commas in between.
+%    \begin{macrocode}
+\def\lst@PrintDialects(#1),{%
+    \ifx\@empty#1\@empty empty\else
+        \lst@PrintDialect{#1}%
+    \fi
+    \lst@PrintDialects@}
+\def\lst@PrintDialects@(#1),{%
+    \ifx\relax#1\else
+        , \lst@PrintDialect{#1}%
+        \expandafter\lst@PrintDialects@
+    \fi}
+%    \end{macrocode}
+% Here we take care of default dialects.
+%    \begin{macrocode}
+\def\lst@PrintDialect#1{%
+    \lst@NormedDef\lst@temp{#1}%
+    \expandafter\ifx\csname\@lst dd@\lst@language\endcsname\lst@temp
+        \texttt{\underbar{#1}}%
+    \else
+        \texttt{#1}%
+    \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Bubble sort}
+%
+% \begin{macro}{\lst@IfLE}
+% \meta{string 1}|\relax\@empty|\meta{string 2}|\relax\@empty|\marg{then}\meta{else}.
+% If \meta{string 1} $\leq$ \meta{string 2}, we execute \meta{then} and
+%  \meta{else} otherwise.
+% Note that this comparision is case insensitive.
+%    \begin{macrocode}
+\def\lst@IfLE#1#2\@empty#3#4\@empty{%
+        \ifx #1\relax \let\lst@next\@firstoftwo
+  \else \ifx #3\relax \let\lst@next\@secondoftwo
+  \else
+    \lowercase{\ifx#1#3}%
+      \def\lst@next{\lst@IfLE#2\@empty#4\@empty}%
+    \else
+      \lowercase{\ifnum`#1<`#3}\relax \let\lst@next\@firstoftwo
+                                \else \let\lst@next\@secondoftwo \fi
+    \fi
+  \fi \fi
+  \lst@next}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\lst@BubbleSort}
+% is in fact a derivation of bubble sort.
+%    \begin{macrocode}
+\def\lst@BubbleSort#1{%
+  \ifx\@empty#1\else
+    \lst@false
+%    \end{macrocode}
+% We swap the first and second, third and fourth, \ldots\ elements and \ldots
+%    \begin{macrocode}
+    \expandafter\lst@BubbleSort@#1\relax,\relax,%
+%    \end{macrocode}
+% then the second and third, fourth and fifth, \ldots\ elements until no elemets
+%  have been swapped.
+%    \begin{macrocode}
+    \expandafter\lst@BubbleSort@\expandafter,\lst@sorted\relax,\relax,%
+    \let#1\lst@sorted
+    \lst@if
+      \def\lst@next{\lst@BubbleSort#1}%
+      \expandafter\expandafter\expandafter\lst@next
+    \fi
+  \fi}
+\def\lst@BubbleSort@#1,#2,{%
+  \ifx\@empty#1\@empty
+    \def\lst@sorted{#2,}%
+    \def\lst@next{\lst@BubbleSort@@}%
+  \else
+    \let\lst@sorted\@empty
+    \def\lst@next{\lst@BubbleSort@@#1,#2,}%
+  \fi
+  \lst@next}
+%    \end{macrocode}
+% As mentioned, the bubbles rise only one step per call since only neighbours
+%  are swapped.
+% Putting the elements at their top most place would be inefficient; \TeX\ would
+%  had to read much more parameters.
+%    \begin{macrocode}
+\def\lst@BubbleSort@@#1,#2,{%
+  \ifx\relax#1\else
+    \ifx\relax#2%
+      \lst@lAddTo\lst@sorted{#1,}%
+      \expandafter\expandafter\expandafter\lst@BubbleSort@@@
+    \else
+      \lst@IfLE #1\relax\@empty #2\relax\@empty
+                    {\lst@lAddTo\lst@sorted{#1,#2,}}%
+          {\lst@true \lst@lAddTo\lst@sorted{#2,#1,}}%
+      \expandafter\expandafter\expandafter\lst@BubbleSort@@
+    \fi
+  \fi}
+\def\lst@BubbleSort@@@#1\relax,{}
+%    \end{macrocode}
+%    \begin{macrocode}
+%</doc>
+%    \end{macrocode}
+%    \begin{macrocode}
+%<*reserved>
+\lst@EndAspect
+%</reserved>
+%    \end{macrocode}
+% \end{macro}
+%
+%
+\endinput

@@ -1,0 +1,621 @@
+% Nejprve uvedeme tridu dokumentu s volbami
+\documentclass[bc,female,java,dept460]{diploma}						% jednostranny dokument
+%\documentclass[bc,female,java,dept460,twoside]{diploma}		% oboustranny dokument
+\usepackage{czech}
+\usepackage[utf8]{inputenc}
+
+
+% Zadame pozadovane vstupy pro generovani titulnich stran.
+\Author{Jan Žitník}
+
+\Title{PIM - Personal Information Management}
+
+\EnglishTitle{Diploma thesis}
+
+\SubmissionDate{16. dubna 2012}
+
+\PrintPublicationAgreement{true}
+
+\AccessRestriction{Licence GPL}
+
+\Thanks{Rád bych na tomto místě poděkoval všem, kteří mi s prací pomohli, protože bez nich by tato práce nevznikla.}
+
+\CzechAbstract{
+Cílem této práce je implementovat webovou aplikaci pro organizaci a správu osobních dat, plánování,
+zaznamenávání poznámek a organizaci schůzek.
+Součástí aplikace je emailový klient a RSS čtečka.
+Bakalářská práce popisuje architekturu a tvorbu webového serveru a uživatelského prostředí bežícím ve webovém prohlížeči.
+}
+
+\CzechKeywords{typografie, \LaTeX, diplomová práce}
+
+\EnglishAbstract{This is English abstract. This is English abstract. This is English abstract. This is English abstract. This is English abstract. This is English abstract.}
+
+\EnglishKeywords{typography, \LaTeX, master thesis}
+
+% Pridame pouzivane zkratky (pokud nejake pouzivame).
+\AddAcronym{PIM}{Personal Information Management}
+\AddAcronym{GPL}{General Public License}
+\AddAcronym{GNU}{GNU is Not Unix}
+\AddAcronym{SQL}{Structured Query Language}
+\AddAcronym{HTML}{Hyper Text Markup Language}
+\AddAcronym{GUI}{Graphical User Interface}
+\AddAcronym{WSGI}{Web Server Gateway Interface}
+\AddAcronym{IMAP}{Internet Message Access Protocol}
+\AddAcronym{SMTP}{Simple Mail Transfer Protocol}
+\AddAcronym{RSS}{RDF Site Summary}
+\AddAcronym{API}{Application Programming Interface}
+
+
+% Zacatek dokumentu
+\begin{document}
+
+% Nechame vysazet titulni strany.
+\MakeTitlePages
+
+% Asi urcite budeme potrebovat obsah prace.
+\tableofcontents
+\cleardoublepage	% odstrankujeme, u jednostranneho dokumentu o jednu stranku, u oboustrenneho o dve
+
+% % Jsou v praci tabulky? Pokud ano vysazime jejich seznam.
+% % Pokud ne smazeme nasledujici makro.
+% \listoftables
+% \cleardoublepage	% odstrankujeme, u jednostranneho dokumentu o jednu stranku, u oboustrenneho o dve
+% 
+% % Jsou v praci obrazky? Pokud ano vysazime jejich seznam.
+% \listoffigures
+% \cleardoublepage	% odstrankujeme, u jednostranneho dokumentu o jednu stranku, u oboustrenneho o dve
+% 
+% 
+% % Jsou v praci vypisy programu? Pokud ano vysazime jejich seznam.
+% \lstlistoflistings
+% \cleardoublepage	% odstrankujeme, u jednostranneho dokumentu o jednu stranku, u oboustrenneho o dve
+% 
+
+
+% Zacneme uvodem
+\section{Úvod}
+\label{sec:uvod}
+Každý se už určitě setkal s problémem cokoliv si zapamatovat, vědět kdy je kde jaká schůzka, že má nakoupit kromě rohlíku i mléko, nebo udělat projekt do školy. V době počítačové jsou papírové organizéry nejen nepraktické, ale špatně se zálohují, nelze v nich vyhledávat a dalších spousta nevýhod.
+Na internetu lze najít spousty hotových řešení, ať už placené, nebo zdarma. Jen málo jich je ale použitelných. Mnoho takových služeb je poskytováno v cloudu a uživatel neví, kdo má k jeho údajům přistup a co se s nimi na pozadí děje.
+Cílem této bakalářské práce je vyvinout systém, který je šířen pod otevřenou licencí, je jednoduše rozšiřitelný a má zdokumentované API.Právě otevřenost systému umožňuje tvorbu libovolných klientských částí, případně využití v jiných aplikacích.
+
+
+První část se zabývá vysvětlením pojmů, teorie a principů, na kterých aplikace zakládá. Je zmíněn programovací jazyk Python, jeho základní popis včetně WSGI interface. Dále je zmíněn Javascript a framework DoJo pro tvorbu uživatelských rozhraní v internetovém prohlížeči.
+
+Druhá část bakalářske práce se zabývá návrhem databáze a architekturou aplikace, podrobné vysvětlení fungování serverové části a komunikací s klientskou aplikací.
+
+Třetí část je věnována podrobnému popisu implementace, popisu vzniklých problémů a jejich řešení. Detailněji ukazuje strukturu programu a využití specifických knihoven a frameworků.
+
+
+\section{Teoretický rozbor}
+\label{sec:teorie}
+
+
+\subsection{JavaScript a RIA aplikace, DoJo}
+% \label{sec:teorie-javascript}
+JavaScript je objektově orientovaný programovací jazyk, využívaný při tvorbě webových stránek. Na rozdíl od serverových programovacích jazyků (například PHP) sloužících ke generování kódu samotné stránky, JavaScript běží na straně klienta, tedy v prohlížeči až po stažení do vašeho počítače.
+
+
+JavaScript se používá především pro vytváření interaktivních webových stránek. Příkladem použití mohou být nejrůznější kontroly správného vyplnění formulářů, obrázky měnící se po přejetí myší, rozbalovací menu atd. JavaScript se také často používá k měření statistik návštěvnosti.
+
+
+Společně s jazykem HTML (informační kostrou stránky) a CSS (formátováním vzhledu stránky) je JavaScript součástí DHTML, souboru technik a postupů zaměřených na zlepšení uživatelského rozhraní a zvýšení prožitku z používání stránek. K tomu JavaScript využívá tzv. DOM, rozhraní umožňující přistupovat k jednotlivým prvkům stránky.
+
+
+JavaScript vyvinula společnost Netscape v roce 1995 a v roce 1998 byl standardizován organizací ISO
+
+Dojo Toolkit je kolekcí javascriptových komponent, které mají pomoct webovému vývojáři. Základem je dojo.js, který obsahuje kolekci „nezbytných“ API pro nejčastější použití a nabízí celou knihovnu funkcí. Dojo je zcela zadarmo pod duální licencí AFL a BSD licencí.
+
+Druhou částí DoJo toolkitu je GUI knihovna dijit a dojox, která poskytuje plnohodnotné prvy pro tvorbu uživatelských rozhraní, využívá tříd a dědičnosti.
+
+\subsection{Python, WSGI}
+% \label{sec:teorie-javascript}
+Programovací jazyk Python vytvořil Guido van Rossum o vánocích roku 1989.
+Při své práci v holandském institutu CWI potřeboval jazyk pro psaní utilit pro distribuovaný operační systém,
+jenž skupina, ve které pracoval, vyvíjela.
+Měl v úmyslu vytvořit snadno rozšiřitelný jazyk podobný jazyku ABC a podoporující výjimky.
+V únoru roku 1991 na Usenetu ohlásil první veřejnou verzi Pythonu. 
+
+Dnes je Python široce používán na mnoha místech, kde je potřeba přehledný a snadno spravovatelný kód.
+Můžeme uvést, že jej používá NASA pro uživatelské rozhraní systému řídícího lety raketoplánů, aplikační server Zope,
+originální implementace protokolu BitTorrent, balíčkovací systém Portage v distribuci Gentoo,
+stejně tak instalátor Anaconda pocházející z RedHat Linuxu a mnohé jiné větší či menší programové celky. 
+
+Python se vyznačuje poměrně netradiční syntaxí založenou na odsazování.
+Taktéž může být pro začátečníka matoucí,
+že Python je silně objektový beztypový jazyk s přístupem podobným spíše Smalltalku nežli "běžným"
+objektovým jazykům jako je třeba Java. 
+
+Python je jazyk interpretovaný a často považovaný za skriptovací.
+Přesto je v něm možno psát i docela rozsáhlé programové celky. Některé příklady takových celků jsem již zmínil výše.
+A ačkoli se Python považuje za jazyk skriptovací, osobně bych řekl,
+že je pro vývoj podobných rozsáhlejších programů velice vhodný,
+a rozhodně i vhodnější než pro psaní jednoduchých skriptů pro bezduché přežvýkávání dat.
+
+ 
+WSGI (Web Server Gateway Interface) definuje jednoduché a univerzální rozhraní (interface) mezi webovým serverem
+a webovou aplikací nebo frameworkem v programovacím jazyce Python.
+Poslední verze jazyka Python, 3.0, vydaná v prosinci 2008, je již podporována modulem modwsgi webového serveru Apache.
+
+
+\subsection{PostgreSQL}
+% \label{sec:teorie-postgres}
+PostgreSQL, často jednoduše Postgres, je objektově-relační databázový systém (ORDBMS).
+Vydáván je pod licencí typu MIT a tudíž se jedná o free a open source software.
+Stejně jako v případě mnoha dalších open source programů, PostgreSQL není vlastněn jedinou firmou,
+ale na jeho vývoji se podílí globální komunita vývojářů a firem.
+
+PostgreSQL je primárně vyvíjen pro Linux resp. pro unixové systémy obecně, nicméně existují i balíčky pro platformu win32.
+
+\section{Architektura aplikace}
+\label{sec:architektura}
+
+Princip aplikace je rozdělení na dvě části - klientská strana,
+kterou můžu zastávat jakákoliv vzdálená aplikace (např. JavaScript aplikace pro dekstop, Java aplikace pro Android)
+a na serverovou aplikaci. Tyto dvě komponenty spolu komunikují předem pevně daným protokolem ve formátu JSON.
+To přináší mnoho výhod, např. nezávislost klientské aplikace, 
+kterou si kdokoliv může napsat díky veřejnému API - díky tomu je možné vytvořit alternativní nativní aplikace pro mobilní platformy,
+případně jiné systémy.
+
+\includegraphics[width=0.7\textwidth]{../applicationArchitecture.png} 
+
+JSON, ve zkratce JavaScript Object Notation je způsob zápisu dat (datový formát) nezávislý na počítačové platformě,
+určený pro přenos dat, která mohou být organizována v polích nebo agregována objektech.
+Vstupem je libovolná datová struktura (číslo, řetězec, boolean, objekt nebo z nich složené pole), výstupem je vždy řetězec.
+Složitost hierarchie vstupní proměnné není teoreticky nijak neomezena.
+
+Navzdory názvu, JSON je zcela obecný a může sloužit pro přenos dat (navíc, čitelný pro člověka)
+v libovolném programovacím nebo skriptovacím jazyku.
+Data, zapsaná metodou JSON, mohou být samozřejmě uložena a přenášena v souborech;
+častěji ale přenos probíhá v prostředí intra- nebo internetu (např. s použitím technologie AJAX).
+
+Mezi nedostatky JSON patří to, že neumožňuje definovat znakovou sadu přenášeného obsahu,
+optimalizace pro přenos binárních dat. Tyto nedostatky platí ale pro některé (slabší) implementace.
+Nealfabetické znaky v řetězcích a binární data JSON jsou escapovány zpětným lomítkem,
+za kterým následuje buď jeden z běžně používaných znaků (např. \\n pro nový řádek, \\t pro tabulátor, \\\ pro samotné zpětné lomítko)
+nebo \\u indikující znak z Unicode (UTF-16), za nímž následují čtyři hexadecimální číslice.
+
+Dá se říci, že JSON sází na jednoduchost způsobu uložení dat, srozumitelnost (data jsou čitelná člověkem),
+platformovou nezávislost a jednotnost (JSON se rychle etabloval) a to vše na úkor velikosti přenášených dat.
+
+
+\newpage
+\subsection{Komunikační protokol}
+JSON komunikaci zahajuje vždy klientská strana, tedy zjednodušeně řečeno zavolá konkrétní modul na serveru.
+
+Při požadavku na server pomocí URL určíme modul a jeho metodu.
+Při standartní konfiguraci má skript server/server.wsgi alias v HTTP server na \/server.
+Při volání modulu se tedy pomocí server\/nazev\_modulu\/nazev\_metody zavolá konkrétní funkce.
+
+Například pro získání dat všech událostí se volá URL server\/Events\/getData
+Každý modul by měl implementovat 4 základní metody - getData, update, insert a delete - více informací v sekci Architektura serveru
+\ref{sec:ServerArchitecture}
+
+\bigskip
+Požadavek na server je vždy ve tvaru:
+\begin{lstlisting}[label=src:Java,caption=Požadavek]
+
+request:
+{
+  search: {
+    task_start: "2012-04-07T22:30:00"
+  },
+  limit: 200,
+  offset: 200
+}
+\end{lstlisting}
+
+Pomocí asociativního pole search určujeme klíčové slova vyhledávání - např. filtrování událostí podle času.
+Pomocí klíčových slov limit a offset určujeme úsek dat, které nám server má vrátit - vhodné pro stárnkování.
+Stránkování dat snižuje zátěž serveru a množství přenesených dat, protože málokdy chceme všechny data najednou.
+
+\newpage
+\begin{lstlisting}[label=src:Java,caption=Odpověď]
+response: 
+{
+  data: [
+    {col1: 355, col2: "string", col3: 128.123, col4: 128, col5: false},
+    ...
+    ...
+  ],
+  dataInfo: {
+    offset: 200,
+    limit: 1000,
+  },
+  columns: {
+    col1: {
+      type: "integer",
+      valid: "[0-9]+",
+      required: true,
+      name: "Název",
+      visibility: ["edit", "static"]
+    }
+  }
+}
+\end{lstlisting}
+
+Vrácená odpověď má podobně striktní zápis jako požadavek. S příchozími daty je přiložen taky popis jednotlivých sloupců,
+jejich datové typy, název a omezení. Mezi omezení patří především příznak, jestli je položka při editaci nebo vkládání povinná,
+případně její validace pomocí regulárního výrazu.
+
+Popis jednotlivých sloupců je poze doporučený, klientská aplikace se tím nemusí řídit a data si může zobrazovat dle uvážení,
+kontrola správnosti dat se děje hlavně na serveru, protože nelze spoléhat na data od klienta.
+
+\bigskip
+Popis všech parametrů:
+\begin{itemize}
+  \item type - Datový typ - je pevně svázán s datovými typy serveru, konkrétně knihovna DataTypes,
+  \item valid - Regulární výraz, podle kterého se data validují
+  \item required - Určuje, zda je parametr povinný při editaci nebo vkládání nového záznamu
+  \item name - Název sloupce 
+  \item visibility - pole, kdy je sloupec/pložka viditelná - ``edit'' při editaci, ``static'' při bežném prohlížení, případně prázné pole pokud má být položka skryta
+  \item flags - další parametry, které určují povahu sloupce - například ``primaryKey'', pokud je sloupec primárním klíčem v databázi
+\end{itemize}
+
+\newpage
+\subsection{Návrh databáze}
+% \label{sec:architektura-navrh}
+
+Aplikace využívá databázový systém PostgreSQL, využívá jeho specifické vlastnosti, není tedy jednoduše přenositelná na jiné DBMS.
+
+Využívá se tří základních objektů:
+Note - poznámka
+Event - událost
+Task - úkol
+
+Všechny tyto tři objekty jsou zlášť v tabulkách a dědí z tabulky objects.
+Dědičnost v PostgreSQL přináší výhodu sjednocených primárních klíčů, případně i ostatních společných sloupců.
+Sjednocené primární klíče jsou především z důvodu stejných vazebních tabulek na štítky.
+
+Štítky slouží k označení, přesněji začlenění do kategorií.
+Rozdíl proti kategoriím je, že každý objekt může mít libovolné množsství štítků.
+
+Všechny tabulky mají striktní vazbu na Users, což jsou uživatelé systému.
+Uživatel se musí vždy autentizovat jménem a heslem, při SQL dotazech pak víme jeho konkrétní ID
+
+\bigskip
+\includegraphics[width=\textwidth]{../structure.png} 
+\newpage
+Popis jednotlivých tabulek
+\begin{itemize}
+  \item Users - Tabulka pro uživatele aplikace
+    \begin{itemize}
+      \item login - Přihlašovací jméno
+      \item password - MD5 hash přihlašovacího hesla
+      \item name - Jméno uživatele
+      \item email - Kontaktní email
+      \item active - Boolean příznak, jestli má uživatel povoleno přihlášení, nebo je blokovaný
+    \end{itemize}
+
+<<<<<<< local
+  \item Users\_tokens - Tabulka pro trvalé přihlášení
+    \begin{itemize}
+      \item user\_id - uživatel
+      \item token - vygenerovaný 32 znakový token
+      \item created - datum vytvoření - tokeny starší 90 dní už nejsou platné
+      \item ip\_address - IP adresa, z které byl token vytvořen
+    \end{itemize}
+    
+=======
+>>>>>>> other
+  \item Contacts - Tabulka kontaktů
+    \begin{itemize}
+      \item name - Název kontaktu
+      \item description - Popis, nebo poznámka
+    \end{itemize}
+
+  \item Contacts\_params - Jednotlivé položky kontaktu. Každý kontakt může mít libovolný počet položek, například email, telefon a adresu
+    \begin{itemize}
+      \item contact\_id - Cizí klíč s vazbou na kontakty
+      \item param - Název položky - např. email nebo telefon
+      \item value - Konkrétní hodnota - např. konkrétní telefon nebo email
+    \end{itemize}
+
+  \item Rss\_feeds - Nastavení RSS - jednotlivé účty a jejich URL pro synchronizaci
+    \begin{itemize}
+      \item name - Název, jen pro přehlednost a výpis v menu
+      \item rss\_url - URL adresa XML feedu
+    \end{itemize}
+
+  \item Imap\_accounts - Účty IMAP klienta
+    \begin{itemize}
+      \item name - Název účtu
+      \item login - Přihlašovací jméno
+      \item password - Heslo - v plaintextu pro přihlášení k IMAPu
+      \item host - IMAP server
+      \item port - IMAP port (defaultně 143)
+      \item ssl - Boolean příznak pro zabezpečené spojení SSL
+    \end{itemize}
+
+  \item Smtp\_accounts - Účty pro odchozí poštu
+     \begin{itemize}
+	\item name - Název účtu
+	\item login - Přihlašovací jméno
+	\item password - Heslo - v plaintextu pro přihlášení k IMAPu
+	\item host - SMTP server
+	\item port - SMTP port (defaultně 25)
+	\item ssl - Boolean příznak pro zabezpečené spojení SSL
+      \end{itemize}
+
+  \item Objects - Rodičovská tabulka ze které dědí Events, Tasks a Notes
+    \begin{itemize}
+      \item object\_id - Sdílený primární klíč, generuje se ze sekvence
+      \item name - Název objektu (Úkolu, události nebo poznámky)
+    \end{itemize}
+
+  \item Events - Tabulka událostí v kalendáři
+      \begin{itemize}
+	\item task\_start - Datum začátku události
+	\item task\_end - Datum konce události
+	\item description - Textový popis
+	\item done - Boolean příznak, true pokud je událost již dokončena/splněna
+	\item recurrence - Boolean příznak opakování
+	\item recurrence\_interval - Interval opakování (počet dní)
+      \end{itemize}
+  
+  \item Tasks - Tabulka úkolů
+      \begin{itemize}
+	\item finished - Boolean příznak, true pokud je úkol již splněn
+      \end{itemize}
+  \item Notes
+      \begin{itemize}
+	\item note - Poznámka, využívá se i jednoduchého HTML formátování (odrážky, číslování, styly textu)
+      \end{itemize}
+  \item Labels - Štítky
+      \begin{itemize}
+	\item name - Název štítku
+	\item description - Textový popis
+      \end{itemize}
+  \item Objects\_labels - Vazební tabulka štítků na objekty
+\end{itemize}
+
+
+\section{Implementace serverové aplikace}
+\label{sec:ServerArchitecture}
+\includegraphics[scale=0.6,width=10cm,height=10cm]{../serverArchitecture.png} 
+\bigskip
+
+Serverová strana je napsaná ve skriptovacím jazyce Python,
+pro spolupráci s webovým serverem využívá WSGI rozhraní, což je nástupce mod\_python.
+WSGI umožňuje, aby aplikace běžela po celou dobu běhu webového serveru a každý příchozí požadavek byl zpracován v jednom vlákně.
+WSGI požaduje skript obsahující metodu application a předává parametry environ a start\_response.
+
+Environ je objekt obsahující proměnné webového serveru, parametry HTTP požadavku a mnoho dalšího.
+
+start\_response je metoda, která slouží k zahájení odpovědi, předávají se dva parametry, z nichž první je HTTP stavový kód a druhý jsou HTTP hlavičky.
+
+Zjednodušeně vstupní skript serveru může vypadat takto:
+\bigskip
+\begin{lstlisting}[label=src:Python,caption=Ukázka WSGI aplikace]
+
+def application(environ, start_response):
+  
+  .... obslužný kód...
+  
+  start_response('200 OK', (
+    ['content-type', 'text/plain']
+  ))
+\end{lstlisting}
+Referenční implementace WSGI nijak nepřispívá ke zjednodušení zpracování HTTP požadavku, slouží jen jako mezivrstva HTTP serveru a Python aplikace, pouze předá asociativní pole s proměnnými HTTP serveru, kde se nachází jak tělo požadavku, tak konkrétní URL.
+V tomto serveru je wsgi skript použit pouze jako mezivrstva mezi webovým serverem a vlastními třídami.
+WSGI umožňuje tzv. middleware, což je obalení aplikace další vrstvou, v tomto případě se využívá knihovny beaker a 
+middleware SessionMiddleware, která implementuje podporu session. Session dává HTTP serveru možnost uložit si
+libovolné informace s vazbou ke konkrétnímu uživateli. Používá se především pro identifikaci přihlášeného uživatele a
+jeho uživatelské ID (odpovídá user\_id v tabulce Users v databázi)
+
+Adresářová struktura serveru má konkrétní význam a rozdělení
+\begin{itemize}
+\item auth - Třídy sloužící k autentizaci uživatelů - např. z databáze nebo LDAP
+\item config - Konfigurační soubory
+\item datasources - Třídy zdrojů dat - např. PostgreSQL databáze, souborový systém
+\item lib - Obecné knihovny serveru
+  \begin{itemize}
+    \item encoders - Vrstvy enkodéru/dekodéru pro serializaci objektů a dat do JSON formátu
+  \end{itemize}
+\item modules - Moduly poskytující konkrétní data a operace nad určitými daty
+ \begin{itemize}
+    \item mail - IMAP a SMTP klient
+	\begin{itemize}
+	    \item maillib - knihovna pro přístup k IMAP a SMPT
+	 \end{itemize}
+    \item rss - RSS čtečka
+    \item timetable - Návrhář VŠB rozvrhu
+  \end{itemize}
+\item templates - HTML šablony pro přihlášení a samotné web aplikace
+\end{itemize}
+
+
+\subsection{Zpracování HTTP požadavku}
+Jako základ zpracování HTTP požadavku slouží třída Request, které v konstruktoru předáme
+environ proměnnou, která obsahuje vše z HTTP požadavku.
+Hned při provádění konstruktoru se environ a jeho proměnné rozparsují na interní proměnné get která obsahuje proměnné z URL (GET požadavek), post která obsahuje tělo HTTP požadavku (metoda POST) a request, která obsahuje obojí, přičemž při shodě názvu proměnných má přednost POST (POST přepíše GET).
+
+Při příchodu požadavku můžeme také nastavit encoder, tedy jaká knihovna bude použita pro serializaci dat, jako výchozí se používá JSON.
+
+Po vytvoření instance třídy Request se volá metoda dispatch(), která obstará zavolání konkrétního modulu,
+serializaci dat a vrací instanci třídy Response.
+
+Třída response obaluje HTTP odpověď, nastavuje správné HTTP hlavičky a stavové kódy.
+WSGI při vracení odpovědi přijímá iterátor, třída request rozhraní iterátoru poskytuje, takže lze využít streamování dat po předem nastavené velikosti bloku dat. To vede ke zmenšení zátěže serveru a snížení využité paměti, protože pokud streamujeme velký datový objekt, díky rozhraní iterátoru nemusí být načten v paměti celý, ale pouze předem nastavená velikost bloku.
+
+Environ obsahuje položku "PATH\_INFO", která obsahuje část URL za adresou serveru. Tuto část URL rozdělíme podle lomítek, a určíme tak jméno konkrétního modulu.
+Poslední část URL určuje název metody v modulu.
+
+Pokud k dané URL byl nalezen modul, včetně spouštěné metody, předáme metodě parametry z HTTP požadavku, ale pouze ty, které daná metoda vyžaduje.
+K tomu slouží knihovna "inspect", konkrétně "inspect.getargspec". Tím je ošetřeno, že metoda dostane pouze ty parametry, které má uvedené ve své definici.
+
+
+\subsection{Autentizace}
+K jakékoliv interakci se serverem musí být uživatel přihlášen, v opačném případě server vrátí přihlašovací formulář z templates/login.html.
+
+Informace o přihlášeném uživateli včetně jeho user\_id se ukládá do session, pokud v session není, automaticky se pokládá za nepřihlášeného. 
+<<<<<<< local
+Pro pohodlnost a usnadnění použití může být přihlášení trvalé - od uživatele tedy nebude vyžadováno žádné jméno ani heslo.
+Trvalé přihlášení funguje na principu ukládání speciálních vygenerovaných tokenů, což jsou náhodné řetězce o délce 32 znaků.
+Tokeny se ukládají do cookies na straně klienta a do databáze na straně serveru. Cookie je malé úložiště dat v internetovém prohlížeči a tyto data jsou odesílány na server s každým požadavkem. Tímto způsobem si tedy uložíme do databáze vygenerovaný token spolu s uživatelským ID a zároveň jej odešleme klientovi. Data, která jsou uložena v cookies mohou mít nastavenou dobu platnosti, v tomto případě je nastavena platnost na 90 dní. Při příštím spuštění aplikace internetový prohlížeč automaticky odešle na server uložený token, v databázi si zjistíme kterému konkrétnímu uživateli token patří a bude považován za přihlášeného.
+Délka tokenu byla zvolena na 32 znaků z důvodu bezpečnosti - čím delší token, tím je složitější je uhádnout a vydávat se za jiného uživatele.
+Tokenů lze vygenerovat pro jednoho uživatele více, aby bylo možné využívat trvalé přihlášení z více míst nebo z více prohlížečů.
+=======
+>>>>>>> other
+
+Nepřihlášenému uživateli server.wsgi vždy pro zpracování HTTP požadavku využívá AuthRequest, který vrací přihlašovací formulář a při odeslání přihlašovacích údajů je ověří pomocí objektu Auth.
+
+Třída Auth implementuje validační funkci "authenticate" přijímající dva parametry - login a heslo, která provádí ověření uživatele v databázi, případně může využívat jiné autentizační mechanismy (např. LDAP, unix PAM atd...). 
+
+Metoda authenticate vrací asociativní pole s uživatelským ID a jeho rolí v systému - buďto admin, nebo "user" - což je obyčejný uživatel.
+Admin má práva přidávat a spravovat další uživatele.
+
+Vzhledem k tomu, že PIM aplikace není předurčena pro široké použití na veřejných serverech, ale spíše na privátních pro pár uživatelů, není povolena registrace, ale uživatele může vytvářet jen administrátor.
+
+<<<<<<< local
+
+
+=======
+>>>>>>> other
+\newpage
+\subsection{Datové typy, validace dat}
+\label{sec:dataTypes}
+V komunikačním protokolu a jeho popisech datových sloupců se uvádí povinný atribut "type", což značí datový typ. Datové typy jsou předefinované objekty, které implementují validaci a případně transformaci příchozích dat pro uložení do databáze.
+
+Datové typy jsou deklarovány v lib.dataTypes a povětšinou implementují rozhraní IType.
+V Pythonu se rozhraní chová stejně jako třída, je to tedy jen "konvence" pro programátora, nikoliv striktní požadavek na implementaci.
+
+\bigskip
+\begin{lstlisting}[label=src:Python,caption=Interface datového typu]
+class IType(object):
+
+        def __init__(self):
+                raise Exception("Not implemented yet")
+
+        def validate(self, value):
+                raise Exception("Not implemented yet")
+
+        def __str__(self):
+                raise Exception("Not implemented yet")
+
+        def encode(self, value):
+                return value
+
+        def decode(self, value):
+                return value
+                
+\end{lstlisting}
+
+\begin{itemize}
+\item \_\_init\_\_, přesněji konstruktor slouží jen k vlastní inicializaci datového typu, může přijímat libovolný počet parametrů, které se mu předají při vytváření instance ve specifikaci modulu
+\item validate je metoda pro ověření správnosti dat, přijímá pouze jednu konkrétní hodnotu v parametru a vrací True nebo False. Samotný kód metody může data ověřovat libovolným způsobem, nejčastěji se využívá knihovny re pro ověření regulárním výrazem, nebo jen např. omezení rozsahu čísla (integer)
+\item \_\_str\_\_ vrací pouze název datového typu jako řetězec, tedy jak se bude datový typ jmenovat ve specifikaci sloupce v komunikačním protokolu.
+\item encode ošetřuje příchozí data při ukládání do databáze, nejčastěji se escapují určité sekvence textového řetězce
+\item decode je inverzní funkce k encode - dekóduje data uložena v databázi při odesílání ke klientovi
+\end{itemize}
+
+
+Vzhledem k objektovému návrhu datových typů se nové typy dají snadno zdědit z již existujících. Výhodné je to tehdy, pokud chceme například jen informovat klienta, že má použít jiný prvek (widget) k editaci.
+Toho jse využívá např. u datového typu HTML, což je v podstatě textový řetězec, ale pro editaci se používá HTML editor.
+
+\bigskip
+\begin{lstlisting}[label=src:Python,caption=Ukázka implementace datového typu]
+class String(IType):
+        regexp = None
+        def __init__(self, regexp = None):
+                self.regexp = regexp
+
+        def validate(self, value):
+                if not self.regexp:
+                        return True
+
+                return False
+
+        def __str__(self):
+                return 'String'
+
+\end{lstlisting}
+
+\begin{lstlisting}[label=src:Python,caption=Dědičnost datového typu]
+class HTML(String):
+        def __str__(self):
+                return 'HTML'
+\end{lstlisting}
+                
+
+\newpage
+\subsection{Automatizované SQL dotazy, transakce}
+
+Vzhledem k tomu, že je aplikace založená převážně na SQL databázi, ukládání a vkladání dat, je vhodné manipulaci s databázemi co nejvíce zjednodušit. Vše se nachází v knihovně lib.sqlReport, která obsahuje třídy pro SELECT, INSERT, UPDATE a DELETE.
+
+Při práci s databází všem třídam (pro jakoukoliv operaci) předáváme definice sloupců.
+Definice sloupců je instance třídy Column, která obsahuje veškerý popis dat ukládáných ve sloupci, stejně jako se přenáší ke klientovi komunikačním protokolem.
+Konstruktor této třídy má jediný parametr - asociativní posle s parametry.
+
+\begin{itemize}
+\item name - název sloupce, bude se zobrazovat na klientské straně
+\item id - identifikátor, který určuje přesný název sloupce výsledného dotazu, tedy název sloupce, případně název aliasu pokud byl v dotazu použit
+\item visibility - pole, které určuje viditelnost na klientské aplikaci
+	\begin{itemize}
+		\item static - viditelné při zobrazování dat
+		\item edit - viditelné při editaci
+	\end{itemize}
+	nebo prázné pole - tedy nebude viditelné nikdy.
+\item required - restrikce, jestli je hodnota vyžadována při editaci, tedy je povinná
+\item insertable - boolean příznak, jestli lze data tohoto sloupce vkládat (INSERT) do databáze. Např. primární klíč, který je generován přímo databází má nastaveno false.
+\item editable - boolean příznak obdobně jako insertable, značí jestli je sloupec upravit pomocí UPDATE
+\item flags - pole s přídavnými informacemi, např. "primaryKey", jestli je sloupec primárním klíčem v databázi
+\item default - výchozí hodnota sloupce - pokud SQL dotaz vrátí NULL, použije se tato hodnota
+\item type - instance třídy datového typu, více \ref{sec:dataTypes}
+\item searchAlias - šablona pro WHERE podmínku. Pokud např. hledáme určitou shodu řetězce pomocí LIKE operátoru, do searchAlias můžeme napsat konkrétní výraz, kde \%s bude nahrazeno konkrétní hodnotou
+\item value - pevně daná hodnota sloupce, je neměnná, využívá se k ukládání vazby na uživatele (user\_id)
+
+\end{itemize}
+
+
+
+\subsection{Moduly, interface modulů}
+
+
+
+% \label{sec:architektura-server}
+
+\section{Implementace klienstké aplikace}
+\subsection{DoJo - objektový JavaScript}
+
+\subsection{Architektura aplikace a design}
+
+\subsection{Komunikace se serverem}
+
+\subsection{Widgety}
+
+
+% \label{sec:architektura-klient}
+
+
+
+
+
+\section{Závěr}
+\label{sec:Conclusion}
+
+\cite{goossens94,lamport94}.
+
+\bigskip
+\begin{flushright}
+Jan Žitník
+\end{flushright}
+
+
+\begin{thebibliography}{99}
+
+\bibitem{goossens94} Goossens, Michel,
+\textit{The \LaTeX\ companion,} New York: Addison, 1994.
+
+\bibitem{lamport94} Lamport, Leslie,
+\textit{\LaTeX: a document preparation system: user's guide and reference manual},
+New York: Addison-Wesley Pub. Co., 1994.
+
+\end{thebibliography}
+
+
+\appendix
+\clearpage
+
+\end{document}

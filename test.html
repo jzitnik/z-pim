@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html style="height:100%;width:100%;">
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+	<title>PIM - Personal Information Manager</title>
+<!-- 	<link id="themeStyles" rel="stylesheet" href="dojo/dijit/themes/claro/claro.css">  -->
+	<style type="text/css">
+		@import "dojo/dijit/themes/claro/claro.css";
+		@import "dojo/dojo/resources/dojo.css";
+		@import "dojo/dojox/grid/resources/claroGrid.css";
+		@import "css/screen.css";
+
+		.claro .dojoxGridCellFocus {
+/* 			outline: none; */
+			border: 1px solid transparent !important;
+		}
+	</style>
+</head>
+<body class="claro" style="width:100%; height:100%;">
+<script type="text/javascript" src="dojo/dojo/dojo.js" djConfig="locale: 'cs', parseOnLoad: true, isDebug: true, debugAtAllCosts: true"></script>
+<script type="text/javascript">
+	dojo.registerModulePath("app", "/app");
+	dojo.require("app.JsonStore");
+	dojo.require("dojo.parser");
+	
+	dojo.require("dijit.layout.TabContainer");
+	dojo.require("dijit.layout.ContentPane");
+	dojo.require("dojox.grid.DataGrid");
+	dojo.require("dijit.layout.BorderContainer");
+
+	function saveModuleName() {
+		dojo.cookie("moduleName", dojo.byId("module").value, {
+			expires: 5000
+		});
+	}
+
+	function send() {
+		dojo.byId("resultSet").innerHTML = "";
+
+		var data = dojo.fromJson(dojo.byId("data").value);
+
+		console.log("SENDING REQUEST", data);
+		dojo.xhrPost({
+			startTime: new Date().getTime(),
+			url: "server/"+dojo.byId("module").value,
+			postData: dojo.toJson(data),
+			load: function(data) {
+				var downloadTime = (new Date().getTime() - this.startTime) / 1000;
+				var elem = dojo.byId("resultSet");
+				elem.innerHTML = "<h3>Elapsed time: "+downloadTime+"</h3><br><pre>"+data+"</pre>";
+			}
+		});
+	}
+</script>
+
+<div dojoType="dijit.layout.BorderContainer" style="height:100%; width:100%;" liveSplitters="true">
+	<div dojoType="dijit.layout.ContentPane" region="top" splitter="true">
+		Název modulu: <input type="text" name="module" id="module" onChange="saveModuleName()">
+		<input type="button" onClick="send()" value="Send">
+		<div>
+		<table><tr><td valign="top">data:</td><td><textarea id="data" rows="5" cols="100">
+{
+
+}
+		</textarea></td></tr></table>
+		</div>
+		</td></tr></table>
+	</div>
+
+	<div dojoType="dijit.layout.TabContainer" id="tab" region="center" splitter="true">
+		<div dojoType="dijit.layout.ContentPane" title="RAW data" selected="true" id="resultSet" region="center">
+
+		</div>
+		<div dojoType="dijit.layout.ContentPane" title="Grid" selected="true" id="datagrid" region="center">
+			
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+dojo.addOnLoad(function() {
+
+// 	var tabContainer = dijit.byId("tab");
+// 	console.log(tabContainer);
+	dojo.byId("module").value = dojo.cookie("moduleName") ? dojo.cookie("moduleName") : "";
+	
+	var store = new app.JsonStore({
+		url: "tasks/TaskList"
+	});
+	
+	var grid = new dojox.grid.DataGrid({
+		store: store,
+		structure: [[
+			{'name': 'name', 'field': 'name', 'width': '100px'},
+			{'name': 'description', 'field': 'description', 'width': '100px'},
+
+		]],
+		width: "auto"
+	});
+
+	grid.placeAt( dojo.byId("datagrid"));
+
+	grid.startup();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+
+	"data": [
+		{"col1": 355, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 356, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 357, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 358, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 359, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 360, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 361, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 362, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 363, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 364, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false},
+		{"col1": 365, "col2": "string", "col3": 128.123, "col4": {"id": 44, "value": "string"}, "col5": false}
+	],
+
+	"dataInfo": {
+
+		"offset": 200,
+
+		"limit": 1000,
+
+		"primaryKey": ["col1", "col2"]
+	},
+
+	"columns": {
+
+		"col1": {
+
+			"type": "integer",
+
+			"valid": "[0-9]+",
+
+			"required": true,
+
+			"name": "Název",
+
+			"visibility": ["edit", "static"]
+
+		},
+
+		"col2": {
+
+			"type": "integer",
+
+			"valid": "[0-9]+",
+
+			"required": true,
+
+			"name": "Název",
+
+			"visibility": ["edit", "static"]
+
+		}
+
+	}
+}
